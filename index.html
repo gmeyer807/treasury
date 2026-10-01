@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Treasury</title>
+<meta name="theme-color" content="#24467a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Cormorant+Garamond:wght@500;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+/* Layout: a single scriptorium column. Lapis-blue actions, rubric-red scripture references, paper-white leaves on a cool ground. */
+:root{
+  --paper:#f3f4f7; --leaf:#ffffff; --ink:#1b2230; --muted:#5d6676; --rule:#dce0e8;
+  --lapis:#24467a; --lapis-ink:#ffffff; --wash:#e6ebf4; --rubric:#a8322a;
+  --f-display:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --f-scripture:"EB Garamond",Georgia,"Times New Roman",serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#10141c; --leaf:#181e29; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2a3242;
+  --lapis:#8eb0e3; --lapis-ink:#0d1420; --wash:#1f2939; --rubric:#e58b7f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#10141c; --leaf:#181e29; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2a3242;
+  --lapis:#8eb0e3; --lapis-ink:#0d1420; --wash:#1f2939; --rubric:#e58b7f; color-scheme:dark}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 var(--f-body);padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+main{max-width:640px;margin:0 auto;padding-block:12px 24px;padding-inline:16px;display:flex;flex-direction:column;gap:12px}
+h1{font-family:var(--f-display);font-weight:600;font-size:34px;line-height:1.1;margin:4px 0 0;text-wrap:balance;letter-spacing:.2px}
+h2{font-family:var(--f-display);font-weight:600;font-size:24px;margin:12px 0 0}
+h3{font-size:13px;margin:0;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+p{margin:0}
+.sub{color:var(--muted)}
+.tiny{font-size:13px;color:var(--muted)}
+.leaf{background:var(--leaf);border:1px solid var(--rule);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.scripture{font-family:var(--f-scripture);font-size:18px;line-height:1.5}
+.ref{font-family:var(--f-scripture);font-variant:small-caps;letter-spacing:.04em;color:var(--rubric);font-weight:500;font-size:18px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+.grow{flex:1;min-width:0}
+button{font:inherit;border:0;border-radius:10px;padding:12px 16px;background:var(--wash);color:var(--ink);cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--lapis);outline-offset:2px}
+button.primary{background:var(--lapis);color:var(--lapis-ink);font-weight:700}
+button.quiet{background:none;padding:6px 8px;color:var(--lapis);font-weight:700}
+button.danger{background:none;padding:6px 8px;color:var(--rubric);font-weight:700}
+button.danger-btn{background:var(--rubric);color:var(--leaf)}
+button:disabled{opacity:.5}
+.full{width:100%}
+.topic-link{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;background:var(--leaf);border:1px solid var(--rule);border-radius:12px;padding:14px 16px;width:100%}
+.topic-link .name{font-family:var(--f-display);font-size:24px;font-weight:600;line-height:1.15}
+.chev{color:var(--muted);font-size:22px}
+label{display:block;font-weight:700;font-size:14px;margin:0 0 6px}
+.field{display:flex;flex-direction:column}
+input,textarea,select{font:inherit;width:100%;padding:12px;border:1px solid var(--rule);border-radius:10px;background:var(--paper);color:var(--ink)}
+textarea{resize:vertical}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:7px 13px;border-radius:999px;background:var(--wash);font-size:14px;border:0}
+.chip.sel{background:var(--lapis);color:var(--lapis-ink);font-weight:700}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.item{padding:12px 0;border-top:1px solid var(--rule);cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0}
+.item:first-of-type{border-top:0;padding-top:0}
+.item .back-text{color:var(--muted);overflow-wrap:anywhere}
+.big{font-size:22px;line-height:1.35}
+.answer{padding-top:12px;border-top:1px solid var(--rule);white-space:pre-wrap;overflow-wrap:anywhere}
+.hint{letter-spacing:.06em;color:var(--muted)}
+.rate{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.rate button{padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.timer{font-family:var(--f-display);font-size:56px;text-align:center;font-variant-numeric:tabular-nums;line-height:1}
+.check{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--rule);font-weight:400;margin:0;cursor:pointer}
+.check:first-child{border-top:0;padding-top:0}
+.check input{width:24px;height:24px;flex:none;margin-top:2px;accent-color:var(--lapis)}
+.backlink{align-self:flex-start;background:none;padding:4px 0;color:var(--lapis);font-weight:700}
+.stat{font-family:var(--f-display);font-size:44px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+.motto{font-family:var(--f-scripture);font-style:italic;color:var(--muted)}
+.motto .ref{font-size:15px;font-style:normal}
+.history{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-variant-numeric:tabular-nums}
+nav.bottom{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--leaf);border-top:1px solid var(--rule);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+nav.bottom button{flex:1;background:none;border-radius:0;padding:8px 0 10px;color:var(--muted);font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.bottom button.on{color:var(--lapis);font-weight:700}
+nav.bottom .ic{font-size:20px;line-height:1.2}
+.toast{position:fixed;bottom:calc(96px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:999px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:calc(100% - 32px);text-align:center;z-index:20}
+.toast.show{opacity:1}
+#sheet{position:fixed;inset:0;background:rgba(10,14,22,.45);display:flex;align-items:flex-end;justify-content:center;z-index:30;padding:16px}
+#sheet[hidden]{display:none!important}
+.sheet-card{background:var(--leaf);border-radius:16px;padding:20px;width:100%;max-width:480px;display:flex;flex-direction:column;gap:12px;margin-bottom:env(safe-area-inset-bottom,0px)}
+.sheet-card h4{margin:0;font-family:var(--f-display);font-size:24px;font-weight:600}
+.sheet-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+details summary{cursor:pointer;font-weight:700}
+ol{padding-left:20px;margin:0;display:flex;flex-direction:column;gap:6px}
+.loading{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+
+
+<div id="app">
+  <main><div class="loading"><h1>Treasury</h1><p class="sub">Opening your topics, verses and quotes…</p></div></main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<div id="sheet" hidden>
+  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sh-t">
+    <h4 id="sh-t"></h4>
+    <p id="sh-b" class="sub"></p>
+    <input id="sh-i" hidden>
+    <div class="sheet-actions"><button id="sh-c">Cancel</button><button id="sh-o" class="primary">OK</button></div>
+  </div>
+</div>
+
+<script>
+const LKEY='treasury.v1';
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clone=x=>JSON.parse(JSON.stringify(x));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today=()=>ymd(new Date());
+const addDays=n=>{const d=new Date();d.setDate(d.getDate()+n);return ymd(d);};
+const daysAgo=d=>{const n=Math.round((new Date(today())-new Date(d))/864e5);return n<=0?'today':n===1?'yesterday':n+' days ago';};
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+const hint=t=>t.replace(/([A-Za-z])[A-Za-z'’\-]*/g,'$1');
+const ivl=n=>n===0?'again':n<30?n+'d':n<365?Math.round(n/30)+'mo':(n/365).toFixed(1)+'y';
+
+/* ---------------- Storage (on this phone only) ---------------- */
+const KIT={"topics": [{"key": "H", "name": "Holiness"}, {"key": "R", "name": "Repentance"}, {"key": "P", "name": "Purity"}], "items": [{"type": "verse", "front": "1 Peter 1:15-16", "back": "But as he which hath called you is holy, so be ye holy in all manner of conversation; Because it is written, Be ye holy; for I am holy.", "topics": ["H"], "source": ""}, {"type": "verse", "front": "Hebrews 12:14", "back": "Follow peace with all men, and holiness, without which no man shall see the Lord:", "topics": ["H"], "source": ""}, {"type": "verse", "front": "Isaiah 6:3", "back": "And one cried unto another, and said, Holy, holy, holy, is the LORD of hosts: the whole earth is full of his glory.", "topics": ["H"], "source": ""}, {"type": "verse", "front": "2 Corinthians 7:1", "back": "Having therefore these promises, dearly beloved, let us cleanse ourselves from all filthiness of the flesh and spirit, perfecting holiness in the fear of God.", "topics": ["H", "P"], "source": ""}, {"type": "verse", "front": "1 Thessalonians 4:3", "back": "For this is the will of God, even your sanctification, that ye should abstain from fornication:", "topics": ["H", "P"], "source": ""}, {"type": "concept", "front": "Positional vs progressive holiness", "back": "Positional: set apart in Christ once for all (Hebrews 10:10). Progressive: actually growing in holiness over a lifetime (2 Corinthians 3:18). Rewrite this in your own words.", "topics": ["H"], "source": ""}, {"type": "verse", "front": "Psalm 51:10", "back": "Create in me a clean heart, O God; and renew a right spirit within me.", "topics": ["R", "P"], "source": ""}, {"type": "verse", "front": "Acts 3:19", "back": "Repent ye therefore, and be converted, that your sins may be blotted out, when the times of refreshing shall come from the presence of the Lord;", "topics": ["R"], "source": ""}, {"type": "verse", "front": "2 Corinthians 7:10", "back": "For godly sorrow worketh repentance to salvation not to be repented of: but the sorrow of the world worketh death.", "topics": ["R"], "source": ""}, {"type": "verse", "front": "1 John 1:9", "back": "If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.", "topics": ["R"], "source": ""}, {"type": "verse", "front": "Joel 2:13", "back": "And rend your heart, and not your garments, and turn unto the LORD your God: for he is gracious and merciful, slow to anger, and of great kindness, and repenteth him of the evil.", "topics": ["R"], "source": ""}, {"type": "concept", "front": "Godly vs worldly sorrow", "back": "Godly sorrow grieves the offence against God and leads to turning and life. Worldly sorrow grieves the consequences and leads to death (2 Corinthians 7:10). Rewrite this in your own words.", "topics": ["R"], "source": ""}, {"type": "quote", "front": "Martin Luther (95 Theses, #1)", "back": "Our Lord and Master Jesus Christ in saying: \"Repent ye,\" etc., intended that the whole life of believers should be penitence.", "topics": ["R"], "source": "95 Theses, 1517 (Wace & Buchheim tr.)"}, {"type": "verse", "front": "Matthew 5:8", "back": "Blessed are the pure in heart: for they shall see God.", "topics": ["P"], "source": ""}, {"type": "verse", "front": "Psalm 119:9", "back": "Wherewithal shall a young man cleanse his way? by taking heed thereto according to thy word.", "topics": ["P"], "source": ""}, {"type": "verse", "front": "1 Corinthians 6:18", "back": "Flee fornication. Every sin that a man doeth is without the body; but he that committeth fornication sinneth against his own body.", "topics": ["P"], "source": ""}, {"type": "verse", "front": "Philippians 4:8", "back": "Finally, brethren, whatsoever things are true, whatsoever things are honest, whatsoever things are just, whatsoever things are pure, whatsoever things are lovely, whatsoever things are of good report; if there be any virtue, and if there be any praise, think on these things.", "topics": ["P"], "source": ""}, {"type": "verse", "front": "2 Timothy 2:22", "back": "Flee also youthful lusts: but follow righteousness, faith, charity, peace, with them that call on the Lord out of a pure heart.", "topics": ["P"], "source": ""}], "links": [{"a": "R", "b": "H", "why": "Repentance is turning away from sin; holiness is what we turn toward."}, {"a": "P", "b": "H", "why": "Purity is holiness applied to the heart, mind and body."}]};
+let S={version:1,topics:[],items:[],links:[]};
+function newItem(type,front,back,topicIds,source=''){return{id:uid(),type,front,back,source,topicIds,ease:2.5,interval:0,reps:0,lapses:0,due:today(),created:today()};}
+function fromKit(kit){
+  const map={},topics=[],items=[],links=[];
+  kit.topics.forEach(t=>{const id=uid();map[t.key]=id;topics.push({id,name:t.name,definition:'',dumps:[],lastDump:null});});
+  kit.items.forEach(i=>{const ids=i.topics.map(k=>map[k]).filter(Boolean);if(ids.length)items.push(newItem(i.type,i.front,i.back,ids,i.source||''));});
+  kit.links.forEach(l=>{if(map[l.a]&&map[l.b])links.push({id:uid(),a:map[l.a],b:map[l.b],why:l.why});});
+  return{version:1,topics,items,links,created:today()};
+}
+let failT=0;
+function saveNow(){
+  S.topics.forEach(t=>{if(t.dumps.length>40)t.dumps=t.dumps.slice(-40);});
+  try{localStorage.setItem(LKEY,JSON.stringify(S));}
+  catch(e){if(Date.now()-failT>4000){failT=Date.now();toast("Couldn't save. Your phone may be low on storage. Save a backup now.");}}
+}
+let saveT;
+function saveLocal(){clearTimeout(saveT);saveT=setTimeout(saveNow,300);}
+window.addEventListener('pagehide',saveNow);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveNow();});
+const putMeta=saveLocal,putItem=()=>saveLocal(),dropItem=()=>saveLocal(),putAll=saveLocal;
+async function getKit(){return KIT;}
+function boot(){
+  let r=null;try{r=localStorage.getItem(LKEY);}catch(e){}
+  if(r){try{S=JSON.parse(r);S.links=S.links||[];}catch(e){S=fromKit(KIT);}}
+  else{S=fromKit(KIT);saveNow();}
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}
+  if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+  route();
+}
+const backupDue=()=>S.items.length&&(!S.lastBackup||Math.round((new Date(today())-new Date(S.lastBackup))/864e5)>=14);
+
+/* ---------------- UI helpers ---------------- */
+const topic=id=>S.topics.find(t=>t.id===id);
+const itemsFor=id=>S.items.filter(i=>i.topicIds.includes(id));
+const dueItems=()=>S.items.filter(i=>i.due<=today());
+const frontCls=i=>i.type==='verse'?'ref':i.type==='quote'?'scripture':'';
+const backCls=i=>i.type==='concept'?'':'scripture';
+let toastT;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600);}
+function ask(o,cb){
+  const i=$('#sh-i'),ok=$('#sh-o');
+  $('#sh-t').textContent=o.title;$('#sh-b').textContent=o.body||'';$('#sh-b').hidden=!o.body;
+  i.hidden=!('value' in o);i.value=o.value||'';
+  ok.textContent=o.ok||'Confirm';ok.className=o.danger?'danger-btn':'primary';
+  $('#sheet').hidden=false;if(!i.hidden)setTimeout(()=>i.focus(),50);
+  ok.onclick=()=>{$('#sheet').hidden=true;cb(i.value);};
+  $('#sh-c').onclick=()=>{$('#sheet').hidden=true;};
+}
+
+/* ---------------- Router (in-page) ---------------- */
+let stack=['home'];
+const cur=()=>stack[stack.length-1];
+function go(p){if(cur()!==p)stack.push(p);if(stack.length>40)stack.shift();route();}
+function back(){if(stack.length>1)stack.pop();route();}
+function tab(p){stack=[p];route();}
+function nav(active){
+  const L=[['home','⌂','Topics'],['review','↻','Review'],['add','＋','Add'],['dump','◎','Recall'],['more','⋯','More']];
+  return `<nav class="bottom">${L.map(([h,i,t])=>`<button class="${active===h?'on':''}" onclick="tab('${h}')"><span class="ic" aria-hidden="true">${i}</span>${t}</button>`).join('')}</nav>`;
+}
+function render(html,active,keep){const y=window.scrollY;app.innerHTML=`<main>${html}</main>`+nav(active);window.scrollTo(0,keep?y:0);}
+const backBtn=label=>stack.length>1?`<button class="backlink" onclick="back()">‹ ${label}</button>`:'';
+
+/* ---------------- Home ---------------- */
+function vHome(){
+  rv=null;
+  const due=dueItems().length;
+  const sug=[...S.topics].filter(t=>itemsFor(t.id).length).sort((a,b)=>(a.lastDump||'').localeCompare(b.lastDump||''))[0];
+  let h=`<div><h1>Treasury</h1><p class="motto">Things new and old · <span class="ref">Matt. 13:52</span></p></div>`;
+  if(!S.topics.length){
+    h+=`<div class="leaf"><p class="big">Start with one topic.</p><p class="sub">Name something you want to be able to speak about, such as Grace or Prayer. Then add its key verses, concepts and quotes.</p></div>`;
+  }else{
+    h+=`<div class="leaf"><div class="row between"><div><div class="stat">${due}</div><div class="tiny">card${due===1?'':'s'} due today</div></div>${due?`<button class="primary" onclick="tab('review')">Start review</button>`:'<span class="sub">All caught up</span>'}</div></div>`;
+    if(sug)h+=`<div class="leaf"><h3>Recall practice</h3><p>${sug.lastDump?`You last explained <b>${esc(sug.name)}</b> from memory ${daysAgo(sug.lastDump)}.`:`You haven't explained <b>${esc(sug.name)}</b> from memory yet.`}</p><button class="primary full" onclick="go('dump/${sug.id}')">Explain ${esc(sug.name)} now</button></div>`;
+    h+=`<h2>Topics</h2>`;
+    h+=S.topics.map(t=>{const n=itemsFor(t.id).length,last=t.dumps[t.dumps.length-1];return `<button class="topic-link" onclick="go('topic/${t.id}')"><span class="grow"><span class="name">${esc(t.name)}</span><br><span class="tiny">${n} card${n===1?'':'s'}${last?` · last recall ${last.score}/${last.total}`:''}</span></span><span class="chev">›</span></button>`;}).join('');
+  }
+  h+=`<div class="row"><input id="nt" class="grow" placeholder="New topic, e.g. Grace" style="flex:1" onkeydown="if(event.key==='Enter')addTopic()"><button onclick="addTopic()">Add topic</button></div>`;
+  if(backupDue())h+=`<div class="leaf"><p><b>Time for a backup.</b> Your cards live only on this phone. Save a copy so you never lose them.</p><button onclick="tab('more')">Back up now</button></div>`;
+  render(h,'home');
+}
+function addTopic(){
+  const n=$('#nt').value.trim();if(!n)return;
+  if(S.topics.some(t=>t.name.toLowerCase()===n.toLowerCase()))return toast('That topic already exists');
+  const t={id:uid(),name:n,definition:'',dumps:[],lastDump:null};S.topics.push(t);putMeta();go('topic/'+t.id);
+}
+
+/* ---------------- Topic hub ---------------- */
+function vTopic(id,keep){
+  const t=topic(id);if(!t)return tab('home');
+  const its=itemsFor(id);
+  const sec=(type,label)=>{const L=its.filter(i=>i.type===type);return `<div class="leaf"><div class="row between"><h3>${label}</h3><button class="quiet" onclick="go('add/${type}/${id}')">＋ Add</button></div><div>${L.length?L.map(itemRow).join(''):'<p class="tiny">None yet.</p>'}</div></div>`;};
+  const links=S.links.filter(l=>l.a===id||l.b===id);
+  const others=S.topics.filter(o=>o.id!==id);
+  let h=backBtn('Back')+`<h1>${esc(t.name)}</h1>`;
+  h+=`<div class="leaf"><h3>In my own words</h3><textarea id="def" rows="4" placeholder="What is ${esc(t.name.toLowerCase())}? Write it without looking anything up." oninput="saveDef('${id}')">${esc(t.definition)}</textarea></div>`;
+  h+=sec('verse','Key verses')+sec('concept','Concepts')+sec('quote','Quotes');
+  h+=`<div class="leaf"><h3>Connections</h3><div>${links.map(l=>{const o=topic(l.a===id?l.b:l.a);return o?`<div class="item" style="cursor:default"><button class="quiet" style="align-self:flex-start;padding:0" onclick="go('topic/${o.id}')">→ ${esc(o.name)}</button><div>${esc(l.why)}</div><button class="danger" style="align-self:flex-start;padding:4px 0" onclick="delLink('${l.id}','${id}')">Remove</button></div>`:'';}).join('')||'<p class="tiny">No connections yet.</p>'}</div>
+  ${others.length?`<select id="lt" aria-label="Topic to connect">${others.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('')}</select><input id="lw" placeholder="Why do they connect? One sentence."><button class="full" onclick="addLink('${id}')">Add connection</button>`:''}</div>`;
+  h+=`<button class="primary full" onclick="go('dump/${id}')">Explain ${esc(t.name)} from memory</button>`;
+  if(t.dumps.length)h+=`<div class="leaf"><h3>Recall history</h3><div class="history">${t.dumps.slice(-6).reverse().map(d=>`<span>${d.date}</span><b>${d.score}/${d.total}</b>`).join('')}</div></div>`;
+  h+=`<div class="row" style="justify-content:center"><button class="quiet" onclick="renameTopic('${id}')">Rename</button><button class="danger" onclick="delTopic('${id}')">Delete topic</button></div>`;
+  render(h,'home',keep);
+}
+function itemRow(i){return `<div class="item" onclick="go('edit/${i.id}')"><div class="${frontCls(i)}"><b>${esc(i.front)}</b></div><div class="${backCls(i)} back-text">${esc(i.back)}</div>${i.source?`<div class="tiny">${esc(i.source)}</div>`:''}</div>`;}
+function saveDef(id){topic(id).definition=$('#def').value;putMeta();}
+function addLink(id){
+  const b=$('#lt').value,why=$('#lw').value.trim();
+  if(!why)return toast('Add one sentence on why they connect');
+  S.links.push({id:uid(),a:id,b,why});putMeta();vTopic(id,true);
+}
+function delLink(lid,id){S.links=S.links.filter(l=>l.id!==lid);putMeta();vTopic(id,true);}
+function renameTopic(id){const t=topic(id);ask({title:'Rename topic',value:t.name,ok:'Rename'},v=>{v=v.trim();if(v){t.name=v;putMeta();vTopic(id,true);}});}
+function delTopic(id){
+  const t=topic(id);
+  ask({title:`Delete ${t.name}?`,body:'Cards that belong only to this topic will be deleted too.',ok:'Delete',danger:true},()=>{
+    S.items.forEach(i=>{if(i.topicIds.includes(id)){i.topicIds=i.topicIds.filter(x=>x!==id);i.topicIds.length?putItem(i):dropItem(i.id);}});
+    S.items=S.items.filter(i=>i.topicIds.length);
+    S.links=S.links.filter(l=>l.a!==id&&l.b!==id);
+    S.topics=S.topics.filter(x=>x.id!==id);putMeta();tab('home');
+  });
+}
+
+/* ---------------- Add / edit ---------------- */
+let form=null;
+const LABELS={verse:['Reference','e.g. Psalm 51:10','Verse text','Type or paste the verse'],concept:['Concept','e.g. Godly vs worldly sorrow','Explanation','In your own words'],quote:['Author','e.g. Charles Spurgeon','Quote','The quote, word for word']};
+function vAdd(type,topicId,editId){
+  const it=editId?S.items.find(i=>i.id===editId):null;
+  if(editId&&!it)return back();
+  form={type:it?it.type:(LABELS[type]?type:'verse'),topics:new Set(it?it.topicIds:(topicId?[topicId]:[])),editId,ret:!!topicId};
+  drawForm(it||{});
+}
+function drawForm(v,keep){
+  const [fl,fp,bl,bp]=LABELS[form.type];
+  let h=backBtn('Back')+`<h1>${form.editId?'Edit card':'Add to your treasury'}</h1>`;
+  if(!S.topics.length){render(h+`<div class="leaf"><p>Create a topic first, then add verses, concepts and quotes to it.</p><button class="primary" onclick="tab('home')">Go to topics</button></div>`,'add');return;}
+  h+=`<div class="seg">${['verse','concept','quote'].map(t=>`<button class="${form.type===t?'primary':''}" onclick="setType('${t}')">${t[0].toUpperCase()+t.slice(1)}</button>`).join('')}</div>
+  <div class="field"><label for="f">${fl}</label><input id="f" value="${esc(v.front)}" placeholder="${fp}"></div>
+  <div class="field"><label for="b">${bl}</label><textarea id="b" rows="5" placeholder="${bp}">${esc(v.back)}</textarea></div>
+  <div class="field"><label>Topics</label><div class="chips">${S.topics.map(t=>`<button class="chip ${form.topics.has(t.id)?'sel':''}" onclick="togTopic('${t.id}')">${esc(t.name)}</button>`).join('')}</div></div>
+  <div class="field"><label for="s">Source <span class="tiny">(optional)</span></label><input id="s" value="${esc(v.source)}" placeholder="Book, sermon or chapter"></div>
+  <button class="primary full" onclick="saveCard()">Save</button>
+  ${form.editId?`<button class="danger" style="align-self:center" onclick="delCard()">Delete this card</button>`:''}`;
+  render(h,form.editId?'home':'add',keep);
+}
+const curVals=()=>({front:$('#f').value,back:$('#b').value,source:$('#s').value});
+function setType(t){const v=curVals();form.type=t;drawForm(v,true);}
+function togTopic(id){const v=curVals();form.topics.has(id)?form.topics.delete(id):form.topics.add(id);drawForm(v,true);}
+function saveCard(){
+  const v=curVals();for(const k in v)v[k]=v[k].trim();
+  if(!v.front||!v.back)return toast('Fill in both fields');
+  if(!form.topics.size)return toast('Pick at least one topic');
+  if(form.editId){const it=S.items.find(i=>i.id===form.editId);Object.assign(it,{type:form.type,...v,topicIds:[...form.topics]});putItem(it);toast('Saved');back();return;}
+  const it=newItem(form.type,v.front,v.back,[...form.topics],v.source);S.items.push(it);putItem(it);toast('Saved');
+  if(form.ret)back();else drawForm({source:v.source});
+}
+function delCard(){ask({title:'Delete this card?',ok:'Delete',danger:true},()=>{const id=form.editId;S.items=S.items.filter(i=>i.id!==id);dropItem(id);back();});}
+
+/* ---------------- Spaced review ---------------- */
+let rv=null;
+function schedule(it,r){
+  let{ease,interval,reps,lapses}=it;
+  if(r===0){lapses++;reps=0;ease=Math.max(1.3,ease-0.2);interval=0;}
+  else if(r===1){ease=Math.max(1.3,ease-0.15);interval=reps===0?1:Math.max(1,Math.round(interval*1.2));reps++;}
+  else if(r===2){interval=reps===0?1:reps===1?3:Math.max(interval+1,Math.round(interval*ease));reps++;}
+  else{interval=reps===0?3:Math.max(interval+2,Math.round(Math.max(interval,1)*ease*1.3));ease+=0.15;reps++;}
+  return{ease,interval,reps,lapses,due:addDays(interval)};
+}
+function vReview(){
+  if(!rv)rv={queue:shuffle(dueItems().map(i=>i.id)),done:0,shown:false,hint:false};
+  const it=S.items.find(i=>i.id===rv.queue[0]);
+  if(!it){const d=rv.done;rv=null;return render(`<h1>Review</h1><div class="leaf"><p class="big">${d?`Done. ${d} card${d===1?'':'s'} reviewed.`:'Nothing due right now.'}</p><p class="sub">Next, explain a topic from memory. It's the practice closest to actually speaking about it.</p><button class="primary full" onclick="tab('dump')">Recall a topic</button></div>`,'review');}
+  const tn=it.topicIds.map(t=>topic(t)?.name).filter(Boolean);
+  const q=it.type==='verse'?`Recite <span class="ref" style="font-size:24px">${esc(it.front)}</span>`:it.type==='quote'?`Quote <b>${esc(it.front)}</b>`:`Explain <b>${esc(it.front)}</b>`;
+  let h=`<div class="row between"><h1>Review</h1><span class="tiny">${rv.queue.length} left</span></div>
+  <div class="leaf"><h3>${it.type} · ${tn.map(esc).join(', ')}</h3><div class="big">${q}</div>`;
+  if(rv.shown)h+=`<div class="answer ${backCls(it)}">${esc(it.back)}</div>${it.source?`<div class="tiny">${esc(it.source)}</div>`:''}`;
+  else if(rv.hint)h+=`<div class="answer scripture hint">${esc(hint(it.back))}</div>`;
+  h+=`</div>`;
+  if(!rv.shown)h+=`<div class="row"><button style="flex:1" onclick="rv.hint=true;vReview()">First letters</button><button class="primary" style="flex:2" onclick="rv.shown=true;vReview()">Show answer</button></div><p class="tiny" style="text-align:center">Say it out loud before you reveal it.</p>`;
+  else h+=`<div class="rate">${['Again','Hard','Good','Easy'].map((l,r)=>`<button onclick="rate(${r})"><span>${l}</span><span class="tiny">${ivl(schedule(it,r).interval)}</span></button>`).join('')}</div>`;
+  render(h,'review');
+}
+function rate(r){
+  const it=S.items.find(i=>i.id===rv.queue[0]);
+  Object.assign(it,schedule(it,r));putItem(it);
+  rv.queue.shift();if(r===0)rv.queue.push(it.id);else rv.done++;
+  rv.shown=false;rv.hint=false;vReview();
+}
+
+/* ---------------- Recall ---------------- */
+let dp=null,timerInt=null;
+function vDumpPick(){
+  const L=[...S.topics].sort((a,b)=>(a.lastDump||'').localeCompare(b.lastDump||''));
+  let h=`<h1>Recall</h1><p class="sub">Pick a topic and explain everything you know about it from memory, as if you were teaching it. Then check what you missed.</p>`;
+  h+=L.length?L.map(t=>`<button class="topic-link" onclick="go('dump/${t.id}')"><span class="grow"><span class="name">${esc(t.name)}</span><br><span class="tiny">${t.lastDump?'Last recalled '+daysAgo(t.lastDump):'Never recalled'}</span></span><span class="chev">›</span></button>`).join(''):`<div class="leaf"><p>Add a topic first.</p><button class="primary" onclick="tab('home')">Go to topics</button></div>`;
+  render(h,'dump');
+}
+function vDump(id){
+  const t=topic(id);if(!t)return tab('dump');
+  if(!dp||dp.id!==id)dp={id,phase:1,text:'',left:120,got:new Set()};
+  let h;
+  if(dp.phase===1){
+    h=backBtn('Back')+`<h1>Explain ${esc(t.name)}</h1>
+    <p class="sub">Without looking, cover what it is, key verses, quotes, and how it connects to other topics. Say it out loud, as if to a friend.</p>
+    <div class="leaf"><div class="timer" id="tm">${fmt(dp.left)}</div>
+    <button class="full" id="tb" onclick="toggleTimer()">${timerInt?'Pause':dp.left<120?'Resume':'Start 2-minute timer'}</button></div>
+    <div class="field"><label for="dt">Notes <span class="tiny">(optional)</span></label><textarea id="dt" rows="6" placeholder="Jot down what comes to mind…" oninput="dp.text=this.value">${esc(dp.text)}</textarea></div>
+    <button class="primary full" onclick="dumpCheck()">I'm done, check my hub</button>`;
+  }else{
+    const its=itemsFor(id);
+    const links=S.links.filter(l=>l.a===id||l.b===id);
+    const row=(key,title,body,fc='',bc='')=>`<label class="check"><input type="checkbox" ${dp.got.has(key)?'checked':''} onchange="togGot('${key}',this.checked)"><span class="grow"><span class="${fc}"><b>${esc(title)}</b></span><br><span class="sub ${bc}">${esc(body)}</span></span></label>`;
+    h=`<h1>${esc(t.name)}: what did you recall?</h1><p class="sub">Tick everything you mentioned. Cards you missed go into today's review.</p>`;
+    if(t.definition)h+=`<div class="leaf"><h3>Your definition</h3><p>${esc(t.definition)}</p></div>`;
+    if(dp.text)h+=`<details class="leaf"><summary>What you wrote</summary><div style="white-space:pre-wrap">${esc(dp.text)}</div></details>`;
+    h+=`<div class="leaf">${its.length||links.length?its.map(i=>row(i.id,i.front,i.back,frontCls(i),backCls(i))).join('')+links.map(l=>{const o=topic(l.a===id?l.b:l.a);return o?row('L'+l.id,'Connection → '+o.name,l.why):'';}).join(''):'<p class="tiny">This topic has nothing in it yet. Add some verses and quotes first.</p>'}</div>`;
+    h+=`<button class="primary full" onclick="dumpSave()">Save result</button>`;
+  }
+  render(h,'dump',dp.phase===2);
+}
+function toggleTimer(){
+  const b=$('#tb');
+  if(timerInt){clearInterval(timerInt);timerInt=null;b.textContent='Resume';return;}
+  if(dp.left<=0)dp.left=120;
+  b.textContent='Pause';
+  timerInt=setInterval(()=>{dp.left--;const el=$('#tm');if(el)el.textContent=fmt(Math.max(0,dp.left));
+    if(dp.left<=0){clearInterval(timerInt);timerInt=null;toast("Time's up. Keep going if you have more.");const bb=$('#tb');if(bb)bb.textContent='Start again';}},1000);
+}
+function dumpCheck(){if(timerInt){clearInterval(timerInt);timerInt=null;}dp.phase=2;window.scrollTo(0,0);vDump(dp.id);}
+function togGot(k,on){on?dp.got.add(k):dp.got.delete(k);}
+function dumpSave(){
+  const t=topic(dp.id),its=itemsFor(dp.id),links=S.links.filter(l=>l.a===dp.id||l.b===dp.id);
+  const total=its.length+links.length,score=dp.got.size;
+  const missed=its.filter(i=>!dp.got.has(i.id));
+  missed.forEach(i=>{if(i.due!==today()){i.due=today();putItem(i);}});
+  if(total){t.dumps.push({date:today(),score,total});t.lastDump=today();putMeta();}
+  dp=null;
+  render(`<h1>${esc(t.name)}</h1><div class="leaf"><div><span class="stat">${score}/${total}</span> <span class="sub">recalled</span></div><p class="sub">${missed.length?`${missed.length} missed card${missed.length===1?' is':'s are'} now in today's review.`:'You remembered every card. Consider adding more depth to this topic.'}</p>
+  ${missed.length?`<button class="primary full" onclick="tab('review')">Review missed cards</button>`:''}<button class="full" onclick="stack=['home','topic/${t.id}'];route()">Open ${esc(t.name)}</button></div>`,'dump');
+}
+
+/* ---------------- More ---------------- */
+function vMore(){
+  render(`<h1>More</h1>
+  <div class="leaf"><h3>Where your cards are saved</h3><p>Your cards are saved only on this phone, inside this app. Nothing is sent anywhere. If you uninstall the app or clear Chrome's site data, they're gone, so keep a backup.</p>${S.lastBackup?`<p class="tiny">Last backup: ${S.lastBackup}</p>`:''}</div>
+  <div class="leaf"><h3>Backup</h3><p class="sub">Keep a copy of everything, or move it somewhere else.</p>
+  <button class="full primary" onclick="exportFile()">Save a backup file</button>
+  <button class="full" onclick="copyBackup()">Copy backup to clipboard</button>
+  <div class="field"><label for="imp">Restore from a backup</label><input type="file" id="impf" accept=".json,application/json" onchange="importFile(this)" aria-label="Backup file"><textarea id="imp" rows="3" style="margin-top:8px" placeholder="…or paste a backup here"></textarea></div>
+  <button class="full" onclick="importText()">Restore pasted backup</button></div>
+  <div class="leaf"><h3>How to use Treasury</h3><ol>
+  <li>Read slowly. When something strikes you, close the book and add it under a topic, in your own words where you can.</li>
+  <li>Do your daily review. Say each answer out loud before revealing it.</li>
+  <li>Once a week per topic, use Recall: explain the topic from memory, then check what you missed.</li>
+  <li>Rewrite your definitions as your understanding grows, and connect topics with a sentence on why.</li></ol></div>
+  <div class="leaf"><p class="tiny">Starter verses are from the KJV, which is in the public domain. Tap any card to switch it to your preferred translation. The starter concept explanations are placeholders for you to rewrite.</p>
+  <button class="danger" style="align-self:flex-start" onclick="resetAll()">Erase everything and start over</button></div>`,'more');
+}
+const backupText=()=>JSON.stringify(S,null,1);
+function exportFile(){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([backupText()],{type:'application/json'}));
+  a.download=`treasury-backup-${today()}.json`;document.body.appendChild(a);a.click();a.remove();
+  S.lastBackup=today();saveNow();toast('Backup saved to your Downloads');
+}
+function copyBackup(){
+  const txt=backupText();
+  const fallback=()=>{const ta=$('#imp');ta.value=txt;ta.focus();ta.select();toast('Select all and copy this text');};
+  try{navigator.clipboard.writeText(txt).then(()=>{S.lastBackup=today();saveNow();toast('Backup copied. Paste it into a note to keep it.');},fallback);}catch(e){fallback();}
+}
+function replaceAll(n){
+  const keep=new Set(n.items.map(i=>i.id));
+  S.items.forEach(i=>{if(!keep.has(i.id))dropItem(i.id);});
+  S=n;putAll();
+}
+function restore(txt){
+  let o;try{o=JSON.parse(txt);if(!Array.isArray(o.topics)||!Array.isArray(o.items))throw 0;}catch(e){return toast("That doesn't look like a Treasury backup");}
+  ask({title:'Restore this backup?',body:`It has ${o.topics.length} topics and ${o.items.length} cards, and will replace everything in Treasury now.`,ok:'Restore',danger:true},()=>{
+    o.links=o.links||[];o.version=1;S=o;saveNow();toast('Restored');tab('home');
+  });
+}
+function importFile(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>restore(r.result);r.readAsText(f);}
+function importText(){const t=$('#imp').value.trim();if(t)restore(t);}
+function resetAll(){
+  ask({title:'Erase everything?',body:'All your topics, cards and recall history will be deleted, and the starter topics put back. This cannot be undone unless you have a backup.',ok:'Erase',danger:true},async()=>{
+    const kit=await getKit();replaceAll(kit?fromKit(kit):{version:1,topics:[],items:[],links:[]});toast('Started over');tab('home');
+  });
+}
+
+/* ---------------- Route ---------------- */
+function route(){
+  if(timerInt){clearInterval(timerInt);timerInt=null;}
+  const [v,a,b]=cur().split('/');
+  switch(v){
+    case 'topic':return vTopic(a);
+    case 'review':return vReview();
+    case 'add':return vAdd(a,b);
+    case 'edit':return vAdd(null,null,a);
+    case 'dump':return a?vDump(a):vDumpPick();
+    case 'more':return vMore();
+    default:return vHome();
+  }
+}
+boot();
+</script>
+
+</body>
+</html>
