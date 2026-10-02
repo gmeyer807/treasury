@@ -3,256 +3,530 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafaf7">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1615">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>Treasury</title>
-<meta name="theme-color" content="#24467a">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Cormorant+Garamond:wght@500;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
 <style>
-/* Layout: a single scriptorium column. Lapis-blue actions, rubric-red scripture references, paper-white leaves on a cool ground. */
+@font-face{font-family:"Cardo";font-weight:400;font-style:normal;font-display:swap;src:url(cardo-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Cardo";font-weight:400;font-style:italic;font-display:swap;src:url(cardo-latin-400-italic.woff2) format("woff2")}
+@font-face{font-family:"Cardo";font-weight:700;font-style:normal;font-display:swap;src:url(cardo-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Alegreya Sans";font-weight:400;font-display:swap;src:url(alegreya-sans-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Alegreya Sans";font-weight:500;font-display:swap;src:url(alegreya-sans-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Alegreya Sans";font-weight:700;font-display:swap;src:url(alegreya-sans-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"UnifrakturMaguntia";font-weight:400;font-display:swap;src:url(unifrakturmaguntia-latin-400-normal.woff2) format("woff2")}
+
+/* Layout: one left-aligned column, like a study Bible page. Topics run down a thumb index on the right edge;
+   references are set in rubric red; gilt is kept for the index tabs, initials and highlights. */
 :root{
-  --paper:#f3f4f7; --leaf:#ffffff; --ink:#1b2230; --muted:#5d6676; --rule:#dce0e8;
-  --lapis:#24467a; --lapis-ink:#ffffff; --wash:#e6ebf4; --rubric:#a8322a;
-  --f-display:"Cormorant Garamond",Georgia,"Times New Roman",serif;
-  --f-scripture:"EB Garamond",Georgia,"Times New Roman",serif;
-  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --paper:#fafaf7; --leaf:#ffffff; --ink:#23201d; --muted:#6f675e; --rule:#e2ddd3; --wash:#f2efe8;
+  --rubric:#a3241b; --gilt:#b38a34; --gilt-ink:#7e5f1a; --mark:#f1e1b4;
+  --leather:#3b2422; --on-leather:#f6efe2; --tab:#2e2624; --tab-ink:#d9b45f;
+  --f-black:"UnifrakturMaguntia","Old English Text MT",Cardo,Georgia,serif;
+  --f-serif:Cardo,"Iowan Old Style",Georgia,"Times New Roman",serif;
+  --f-sans:"Alegreya Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --paper:#10141c; --leaf:#181e29; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2a3242;
-  --lapis:#8eb0e3; --lapis-ink:#0d1420; --wash:#1f2939; --rubric:#e58b7f; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --paper:#10141c; --leaf:#181e29; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2a3242;
-  --lapis:#8eb0e3; --lapis-ink:#0d1420; --wash:#1f2939; --rubric:#e58b7f; color-scheme:dark}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#1b1615; --leaf:#241d1b; --ink:#ede5da; --muted:#a99e91; --rule:#3a302c; --wash:#272020;
+  --rubric:#e8887a; --gilt:#d2ab5a; --gilt-ink:#ddb866; --mark:#5a4720;
+  --leather:#e8d6ae; --on-leather:#231a17; --tab:#3a2e2a; --tab-ink:#e2bd68; color-scheme:dark}}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 var(--f-body);padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
-main{max-width:640px;margin:0 auto;padding-block:12px 24px;padding-inline:16px;display:flex;flex-direction:column;gap:12px}
-h1{font-family:var(--f-display);font-weight:600;font-size:34px;line-height:1.1;margin:4px 0 0;text-wrap:balance;letter-spacing:.2px}
-h2{font-family:var(--f-display);font-weight:600;font-size:24px;margin:12px 0 0}
-h3{font-size:13px;margin:0;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.5 var(--f-sans);overflow-x:hidden;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+main{max-width:620px;margin:0 auto;padding-block:20px 32px;padding-inline:20px;display:flex;flex-direction:column;gap:28px}
+section.note{gap:4px}
+section{display:flex;flex-direction:column;gap:12px}
 p{margin:0}
-.sub{color:var(--muted)}
-.tiny{font-size:13px;color:var(--muted)}
-.leaf{background:var(--leaf);border:1px solid var(--rule);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
-.scripture{font-family:var(--f-scripture);font-size:18px;line-height:1.5}
-.ref{font-family:var(--f-scripture);font-variant:small-caps;letter-spacing:.04em;color:var(--rubric);font-weight:500;font-size:18px}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.between{justify-content:space-between}
-.grow{flex:1;min-width:0}
-button{font:inherit;border:0;border-radius:10px;padding:12px 16px;background:var(--wash);color:var(--ink);cursor:pointer}
-button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--lapis);outline-offset:2px}
-button.primary{background:var(--lapis);color:var(--lapis-ink);font-weight:700}
-button.quiet{background:none;padding:6px 8px;color:var(--lapis);font-weight:700}
-button.danger{background:none;padding:6px 8px;color:var(--rubric);font-weight:700}
-button.danger-btn{background:var(--rubric);color:var(--leaf)}
-button:disabled{opacity:.5}
-.full{width:100%}
-.topic-link{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;background:var(--leaf);border:1px solid var(--rule);border-radius:12px;padding:14px 16px;width:100%}
-.topic-link .name{font-family:var(--f-display);font-size:24px;font-weight:600;line-height:1.15}
-.chev{color:var(--muted);font-size:22px}
-label{display:block;font-weight:700;font-size:14px;margin:0 0 6px}
-.field{display:flex;flex-direction:column}
-input,textarea,select{font:inherit;width:100%;padding:12px;border:1px solid var(--rule);border-radius:10px;background:var(--paper);color:var(--ink)}
+h1,h2{margin:0;font-weight:400;text-wrap:balance}
+h1{font-family:var(--f-serif);font-size:36px;line-height:1.1}
+h2{font-family:var(--f-serif);font-style:italic;font-size:21px;line-height:1.25}
+.muted{color:var(--muted)}
+.small{font-size:15px}
+.lead{font-family:var(--f-serif);font-size:24px;line-height:1.3}
+.serif{font-family:var(--f-serif);font-size:18px;line-height:1.6}
+.ref{font-family:var(--f-serif);font-weight:700;color:var(--rubric);letter-spacing:.01em}
+.head-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+mark{background:linear-gradient(transparent 58%,var(--mark) 58%);color:inherit;padding:0 1px}
+
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+:focus-visible{outline:2px solid var(--gilt);outline-offset:3px;border-radius:4px}
+.btn{font:500 16px/1.2 var(--f-sans);padding:13px 18px;border-radius:6px;border:1px solid var(--rule);background:var(--paper);text-align:center}
+.btn.primary{background:var(--leather);border-color:var(--leather);color:var(--on-leather)}
+.btn.block{width:100%}
+.link{font:500 16px var(--f-sans);color:var(--gilt-ink);padding:6px 0;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;text-decoration-color:var(--gilt)}
+.head-row .link,.actions .link{text-decoration:none}
+.link.danger{color:var(--rubric)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.backbtn{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:16px;padding:4px 0;align-self:flex-start}
+.backbtn svg{width:9px;height:15px}
+
+input,textarea,select{font:400 17px/1.45 var(--f-sans);width:100%;padding:12px 14px;border:1px solid var(--rule);border-radius:6px;background:var(--leaf);color:var(--ink)}
 textarea{resize:vertical}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{padding:7px 13px;border-radius:999px;background:var(--wash);font-size:14px;border:0}
-.chip.sel{background:var(--lapis);color:var(--lapis-ink);font-weight:700}
-.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.item{padding:12px 0;border-top:1px solid var(--rule);cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0}
-.item:first-of-type{border-top:0;padding-top:0}
-.item .back-text{color:var(--muted);overflow-wrap:anywhere}
-.big{font-size:22px;line-height:1.35}
-.answer{padding-top:12px;border-top:1px solid var(--rule);white-space:pre-wrap;overflow-wrap:anywhere}
-.hint{letter-spacing:.06em;color:var(--muted)}
-.rate{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.rate button{padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:2px}
-.timer{font-family:var(--f-display);font-size:56px;text-align:center;font-variant-numeric:tabular-nums;line-height:1}
-.check{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--rule);font-weight:400;margin:0;cursor:pointer}
-.check:first-child{border-top:0;padding-top:0}
-.check input{width:24px;height:24px;flex:none;margin-top:2px;accent-color:var(--lapis)}
-.backlink{align-self:flex-start;background:none;padding:4px 0;color:var(--lapis);font-weight:700}
-.stat{font-family:var(--f-display);font-size:44px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
-.motto{font-family:var(--f-scripture);font-style:italic;color:var(--muted)}
-.motto .ref{font-size:15px;font-style:normal}
-.history{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-variant-numeric:tabular-nums}
-nav.bottom{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--leaf);border-top:1px solid var(--rule);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
-nav.bottom button{flex:1;background:none;border-radius:0;padding:8px 0 10px;color:var(--muted);font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px}
-nav.bottom button.on{color:var(--lapis);font-weight:700}
-nav.bottom .ic{font-size:20px;line-height:1.2}
-.toast{position:fixed;bottom:calc(96px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:999px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:calc(100% - 32px);text-align:center;z-index:20}
+textarea.writing{font-family:var(--f-serif);font-size:18px;line-height:1.6;background:var(--wash);border-color:transparent}
+label,.label{display:block;font-weight:500;font-size:15px;color:var(--muted);margin-bottom:6px}
+.field{display:flex;flex-direction:column}
+.inline-form{display:flex;gap:8px}
+.inline-form input{flex:1;min-width:0}
+
+/* Wordmark */
+.mast{display:flex;flex-direction:column;gap:6px}
+.wordmark{font-family:var(--f-black);font-size:56px;line-height:.95;letter-spacing:.01em}
+.mast-verse{font-family:var(--f-serif);font-style:italic;color:var(--muted);font-size:16px;line-height:1.45;max-width:34ch}
+.mast-verse .ref{font-style:normal;font-size:15px}
+.mast-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+
+/* Thumb index */
+.index{display:flex;flex-direction:column;gap:3px;margin-right:-20px}
+.ix{display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;width:100%}
+.ix-body{padding:10px 0;min-width:0;border-bottom:1px solid var(--rule)}
+.ix:last-child .ix-body{border-bottom:0}
+.ix-name{font-family:var(--f-serif);font-size:24px;line-height:1.2;display:block}
+.ix-meta{font-size:15px;color:var(--muted)}
+.tab{width:48px;height:58px;border-radius:29px 0 0 29px;background:var(--tab);color:var(--tab-ink);
+  font-family:var(--f-serif);font-weight:700;font-size:22px;display:grid;place-items:center;padding-left:4px}
+
+/* Topic page */
+.topic-head{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:end}
+.initial{font-family:var(--f-black);font-size:96px;line-height:.78;color:var(--gilt)}
+.topic-head h1{font-size:34px}
+.entries{display:flex;flex-direction:column;gap:18px}
+.entry{display:flex;flex-direction:column;gap:3px;width:100%;min-width:0}
+.entry .ref{font-size:17px}
+.entry .text{font-family:var(--f-serif);font-size:18px;line-height:1.55;overflow-wrap:anywhere}
+.entry .text.quote{font-style:italic}
+.entry .name{font-weight:700;font-size:17px}
+.entry .plain{color:var(--ink);overflow-wrap:anywhere}
+.entry .by{color:var(--muted);font-size:15px}
+.empty{color:var(--muted);font-size:16px}
+
+/* Links */
+.chain{display:flex;flex-direction:column;gap:4px;padding-left:14px;border-left:2px solid var(--gilt)}
+.chain .pair{font-family:var(--f-serif);font-size:19px}
+.chain .why{font-family:var(--f-serif);font-style:italic;font-size:17px;line-height:1.5}
+.sugg{display:flex;flex-direction:column;gap:10px;padding:16px;border:1px dashed var(--gilt);border-radius:8px;background:var(--leaf)}
+.sugg .pair{font-family:var(--f-serif);font-size:20px;line-height:1.3}
+.sugg .snippet{font-family:var(--f-serif);font-size:17px;line-height:1.55;overflow-wrap:anywhere}
+.words{display:flex;flex-wrap:wrap;gap:6px}
+.word{font-size:14px;padding:2px 10px;border-radius:999px;background:var(--wash);color:var(--ink)}
+
+/* Chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 15px var(--f-sans);padding:7px 14px;border-radius:999px;border:1px solid var(--rule);background:var(--leaf)}
+.chip.sel{background:var(--leather);border-color:var(--leather);color:var(--on-leather)}
+.chip.hint{border-style:dashed;border-color:var(--gilt)}
+.chip .muted{font-family:var(--f-serif);font-style:italic;color:var(--muted);margin-left:4px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.seg button{padding:11px 0;text-align:center;font-weight:500;border-left:1px solid var(--rule)}
+.seg button:first-child{border-left:0}
+.seg button.on{background:var(--leather);color:var(--on-leather)}
+#sugg-line{font-size:15px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#sugg-line:empty{display:none}
+
+/* Review */
+.page{background:var(--leaf);border:1px solid var(--rule);border-right:4px solid var(--gilt);border-radius:4px;padding:22px 20px;display:flex;flex-direction:column;gap:14px;min-height:220px}
+.prompt{font-family:var(--f-serif);font-size:26px;line-height:1.3}
+.prompt .ref{font-size:28px}
+.answer{font-family:var(--f-serif);font-size:20px;line-height:1.6;padding-top:14px;border-top:1px solid var(--rule);white-space:pre-wrap;overflow-wrap:anywhere}
+.answer.plain{font-family:var(--f-sans);font-size:18px}
+.answer.hint{color:var(--muted);letter-spacing:.08em}
+.rate{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.rate .btn{padding:10px 4px;display:flex;flex-direction:column;gap:3px;align-items:center}
+.rate .btn small{font-size:13px;color:var(--muted)}
+.progress{height:3px;background:var(--rule);border-radius:2px;overflow:hidden}
+.progress span{display:block;height:100%;background:var(--rubric)}
+
+/* Recall */
+.timer{font-family:var(--f-serif);font-size:72px;line-height:1;font-variant-numeric:tabular-nums lining-nums}
+.check{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;cursor:pointer;padding:4px 0}
+.check input{width:24px;height:24px;margin:3px 0 0;accent-color:var(--leather)}
+.score{font-family:var(--f-serif);font-size:60px;line-height:1}
+.history{display:grid;grid-template-columns:1fr auto;gap:6px 16px;font-variant-numeric:tabular-nums;font-size:16px}
+
+/* Bottom bar */
+nav.bar{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--paper);border-top:1px solid var(--rule);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+nav.bar button{flex:1;text-align:center;padding:14px 0 16px;font:500 15px var(--f-sans);color:var(--muted);position:relative}
+nav.bar button.on{color:var(--ink)}
+nav.bar button.on::before{content:"";position:absolute;top:-1px;left:28%;right:28%;height:3px;background:var(--rubric);border-radius:0 0 2px 2px}
+nav.bar sup{color:var(--rubric);font-size:12px;margin-left:2px}
+
+.toast{position:fixed;bottom:calc(88px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:6px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:calc(100% - 40px);text-align:center;font-size:16px;z-index:20}
 .toast.show{opacity:1}
-#sheet{position:fixed;inset:0;background:rgba(10,14,22,.45);display:flex;align-items:flex-end;justify-content:center;z-index:30;padding:16px}
-#sheet[hidden]{display:none!important}
-.sheet-card{background:var(--leaf);border-radius:16px;padding:20px;width:100%;max-width:480px;display:flex;flex-direction:column;gap:12px;margin-bottom:env(safe-area-inset-bottom,0px)}
-.sheet-card h4{margin:0;font-family:var(--f-display);font-size:24px;font-weight:600}
-.sheet-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-details summary{cursor:pointer;font-weight:700}
-ol{padding-left:20px;margin:0;display:flex;flex-direction:column;gap:6px}
-.loading{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center}
+#sheet{position:fixed;inset:0;background:rgba(20,14,12,.5);display:flex;align-items:flex-end;justify-content:center;z-index:30;padding:16px}
+#sheet[hidden]{display:none}
+.sheet-card{background:var(--leaf);border-radius:12px;padding:22px 20px;width:100%;max-width:480px;display:flex;flex-direction:column;gap:14px;margin-bottom:env(safe-area-inset-bottom,0px)}
+.sheet-card h3{margin:0;font-family:var(--f-serif);font-weight:400;font-size:24px}
+.sheet-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn.danger{background:var(--rubric);border-color:var(--rubric);color:var(--leaf)}
+details summary{cursor:pointer;color:var(--gilt-ink);font-weight:500}
+ol.steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px}
 @media (prefers-reduced-motion:reduce){.toast{transition:none}}
 </style>
 </head>
 <body>
-
-
-<div id="app">
-  <main><div class="loading"><h1>Treasury</h1><p class="sub">Opening your topics, verses and quotes…</p></div></main>
-</div>
+<div id="app"></div>
 <div class="toast" id="toast" role="status"></div>
 <div id="sheet" hidden>
   <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sh-t">
-    <h4 id="sh-t"></h4>
-    <p id="sh-b" class="sub"></p>
-    <input id="sh-i" hidden>
-    <div class="sheet-actions"><button id="sh-c">Cancel</button><button id="sh-o" class="primary">OK</button></div>
+    <h3 id="sh-t"></h3>
+    <p id="sh-b" class="muted"></p>
+    <input id="sh-i" hidden aria-label="Value">
+    <div class="sheet-actions"><button class="btn" id="sh-c">Cancel</button><button class="btn primary" id="sh-o">OK</button></div>
   </div>
 </div>
-
 <script>
 const LKEY='treasury.v1';
+const KIT={"topics": [{"key": "H", "name": "Holiness"}, {"key": "R", "name": "Repentance"}, {"key": "P", "name": "Purity"}], "items": [{"type": "verse", "front": "1 Peter 1:15-16", "back": "But as he which hath called you is holy, so be ye holy in all manner of conversation; Because it is written, Be ye holy; for I am holy.", "topics": ["H"], "source": ""}, {"type": "verse", "front": "Hebrews 12:14", "back": "Follow peace with all men, and holiness, without which no man shall see the Lord:", "topics": ["H"], "source": ""}, {"type": "verse", "front": "Isaiah 6:3", "back": "And one cried unto another, and said, Holy, holy, holy, is the LORD of hosts: the whole earth is full of his glory.", "topics": ["H"], "source": ""}, {"type": "verse", "front": "2 Corinthians 7:1", "back": "Having therefore these promises, dearly beloved, let us cleanse ourselves from all filthiness of the flesh and spirit, perfecting holiness in the fear of God.", "topics": ["H", "P"], "source": ""}, {"type": "verse", "front": "1 Thessalonians 4:3", "back": "For this is the will of God, even your sanctification, that ye should abstain from fornication:", "topics": ["H", "P"], "source": ""}, {"type": "concept", "front": "Positional vs progressive holiness", "back": "Positional: set apart in Christ once for all (Hebrews 10:10). Progressive: actually growing in holiness over a lifetime (2 Corinthians 3:18). Rewrite this in your own words.", "topics": ["H"], "source": ""}, {"type": "verse", "front": "Psalm 51:10", "back": "Create in me a clean heart, O God; and renew a right spirit within me.", "topics": ["R", "P"], "source": ""}, {"type": "verse", "front": "Acts 3:19", "back": "Repent ye therefore, and be converted, that your sins may be blotted out, when the times of refreshing shall come from the presence of the Lord;", "topics": ["R"], "source": ""}, {"type": "verse", "front": "2 Corinthians 7:10", "back": "For godly sorrow worketh repentance to salvation not to be repented of: but the sorrow of the world worketh death.", "topics": ["R"], "source": ""}, {"type": "verse", "front": "1 John 1:9", "back": "If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.", "topics": ["R"], "source": ""}, {"type": "verse", "front": "Joel 2:13", "back": "And rend your heart, and not your garments, and turn unto the LORD your God: for he is gracious and merciful, slow to anger, and of great kindness, and repenteth him of the evil.", "topics": ["R"], "source": ""}, {"type": "concept", "front": "Godly vs worldly sorrow", "back": "Godly sorrow grieves the offence against God and leads to turning and life. Worldly sorrow grieves the consequences and leads to death (2 Corinthians 7:10). Rewrite this in your own words.", "topics": ["R"], "source": ""}, {"type": "quote", "front": "Martin Luther (95 Theses, #1)", "back": "Our Lord and Master Jesus Christ in saying: \"Repent ye,\" etc., intended that the whole life of believers should be penitence.", "topics": ["R"], "source": "95 Theses, 1517 (Wace & Buchheim tr.)"}, {"type": "verse", "front": "Matthew 5:8", "back": "Blessed are the pure in heart: for they shall see God.", "topics": ["P"], "source": ""}, {"type": "verse", "front": "Psalm 119:9", "back": "Wherewithal shall a young man cleanse his way? by taking heed thereto according to thy word.", "topics": ["P"], "source": ""}, {"type": "verse", "front": "1 Corinthians 6:18", "back": "Flee fornication. Every sin that a man doeth is without the body; but he that committeth fornication sinneth against his own body.", "topics": ["P"], "source": ""}, {"type": "verse", "front": "Philippians 4:8", "back": "Finally, brethren, whatsoever things are true, whatsoever things are honest, whatsoever things are just, whatsoever things are pure, whatsoever things are lovely, whatsoever things are of good report; if there be any virtue, and if there be any praise, think on these things.", "topics": ["P"], "source": ""}, {"type": "verse", "front": "2 Timothy 2:22", "back": "Flee also youthful lusts: but follow righteousness, faith, charity, peace, with them that call on the Lord out of a pure heart.", "topics": ["P"], "source": ""}], "links": [{"a": "R", "b": "H", "why": "Repentance is turning away from sin; holiness is what we turn toward."}, {"a": "P", "b": "H", "why": "Purity is holiness applied to the heart, mind and body."}]};
 const $=s=>document.querySelector(s);
 const app=$('#app');
 const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const clone=x=>JSON.parse(JSON.stringify(x));
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const today=()=>ymd(new Date());
 const addDays=n=>{const d=new Date();d.setDate(d.getDate()+n);return ymd(d);};
-const daysAgo=d=>{const n=Math.round((new Date(today())-new Date(d))/864e5);return n<=0?'today':n===1?'yesterday':n+' days ago';};
+const dayDiff=d=>Math.round((new Date(today())-new Date(d))/864e5);
+const daysAgo=d=>{const n=dayDiff(d);return n<=0?'today':n===1?'yesterday':n+' days ago';};
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
 const hint=t=>t.replace(/([A-Za-z])[A-Za-z'’\-]*/g,'$1');
-const ivl=n=>n===0?'again':n<30?n+'d':n<365?Math.round(n/30)+'mo':(n/365).toFixed(1)+'y';
+const ivl=n=>n===0?'Now':n===1?'1 day':n<30?n+' days':n<365?Math.round(n/30)+' mo':(n/365).toFixed(1)+' yr';
+const plural=(n,w)=>n+' '+w+(n===1?'':'s');
+const CHEV='<svg viewBox="0 0 9 15" aria-hidden="true"><path d="M7.5 1.5 1.5 7.5l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-/* ---------------- Storage (on this phone only) ---------------- */
-const KIT={"topics": [{"key": "H", "name": "Holiness"}, {"key": "R", "name": "Repentance"}, {"key": "P", "name": "Purity"}], "items": [{"type": "verse", "front": "1 Peter 1:15-16", "back": "But as he which hath called you is holy, so be ye holy in all manner of conversation; Because it is written, Be ye holy; for I am holy.", "topics": ["H"], "source": ""}, {"type": "verse", "front": "Hebrews 12:14", "back": "Follow peace with all men, and holiness, without which no man shall see the Lord:", "topics": ["H"], "source": ""}, {"type": "verse", "front": "Isaiah 6:3", "back": "And one cried unto another, and said, Holy, holy, holy, is the LORD of hosts: the whole earth is full of his glory.", "topics": ["H"], "source": ""}, {"type": "verse", "front": "2 Corinthians 7:1", "back": "Having therefore these promises, dearly beloved, let us cleanse ourselves from all filthiness of the flesh and spirit, perfecting holiness in the fear of God.", "topics": ["H", "P"], "source": ""}, {"type": "verse", "front": "1 Thessalonians 4:3", "back": "For this is the will of God, even your sanctification, that ye should abstain from fornication:", "topics": ["H", "P"], "source": ""}, {"type": "concept", "front": "Positional vs progressive holiness", "back": "Positional: set apart in Christ once for all (Hebrews 10:10). Progressive: actually growing in holiness over a lifetime (2 Corinthians 3:18). Rewrite this in your own words.", "topics": ["H"], "source": ""}, {"type": "verse", "front": "Psalm 51:10", "back": "Create in me a clean heart, O God; and renew a right spirit within me.", "topics": ["R", "P"], "source": ""}, {"type": "verse", "front": "Acts 3:19", "back": "Repent ye therefore, and be converted, that your sins may be blotted out, when the times of refreshing shall come from the presence of the Lord;", "topics": ["R"], "source": ""}, {"type": "verse", "front": "2 Corinthians 7:10", "back": "For godly sorrow worketh repentance to salvation not to be repented of: but the sorrow of the world worketh death.", "topics": ["R"], "source": ""}, {"type": "verse", "front": "1 John 1:9", "back": "If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.", "topics": ["R"], "source": ""}, {"type": "verse", "front": "Joel 2:13", "back": "And rend your heart, and not your garments, and turn unto the LORD your God: for he is gracious and merciful, slow to anger, and of great kindness, and repenteth him of the evil.", "topics": ["R"], "source": ""}, {"type": "concept", "front": "Godly vs worldly sorrow", "back": "Godly sorrow grieves the offence against God and leads to turning and life. Worldly sorrow grieves the consequences and leads to death (2 Corinthians 7:10). Rewrite this in your own words.", "topics": ["R"], "source": ""}, {"type": "quote", "front": "Martin Luther (95 Theses, #1)", "back": "Our Lord and Master Jesus Christ in saying: \"Repent ye,\" etc., intended that the whole life of believers should be penitence.", "topics": ["R"], "source": "95 Theses, 1517 (Wace & Buchheim tr.)"}, {"type": "verse", "front": "Matthew 5:8", "back": "Blessed are the pure in heart: for they shall see God.", "topics": ["P"], "source": ""}, {"type": "verse", "front": "Psalm 119:9", "back": "Wherewithal shall a young man cleanse his way? by taking heed thereto according to thy word.", "topics": ["P"], "source": ""}, {"type": "verse", "front": "1 Corinthians 6:18", "back": "Flee fornication. Every sin that a man doeth is without the body; but he that committeth fornication sinneth against his own body.", "topics": ["P"], "source": ""}, {"type": "verse", "front": "Philippians 4:8", "back": "Finally, brethren, whatsoever things are true, whatsoever things are honest, whatsoever things are just, whatsoever things are pure, whatsoever things are lovely, whatsoever things are of good report; if there be any virtue, and if there be any praise, think on these things.", "topics": ["P"], "source": ""}, {"type": "verse", "front": "2 Timothy 2:22", "back": "Flee also youthful lusts: but follow righteousness, faith, charity, peace, with them that call on the Lord out of a pure heart.", "topics": ["P"], "source": ""}], "links": [{"a": "R", "b": "H", "why": "Repentance is turning away from sin; holiness is what we turn toward."}, {"a": "P", "b": "H", "why": "Purity is holiness applied to the heart, mind and body."}]};
-let S={version:1,topics:[],items:[],links:[]};
+/* ================= Storage: this phone only ================= */
+let S={version:1,topics:[],items:[],links:[],dismissed:[]};
 function newItem(type,front,back,topicIds,source=''){return{id:uid(),type,front,back,source,topicIds,ease:2.5,interval:0,reps:0,lapses:0,due:today(),created:today()};}
 function fromKit(kit){
   const map={},topics=[],items=[],links=[];
   kit.topics.forEach(t=>{const id=uid();map[t.key]=id;topics.push({id,name:t.name,definition:'',dumps:[],lastDump:null});});
   kit.items.forEach(i=>{const ids=i.topics.map(k=>map[k]).filter(Boolean);if(ids.length)items.push(newItem(i.type,i.front,i.back,ids,i.source||''));});
   kit.links.forEach(l=>{if(map[l.a]&&map[l.b])links.push({id:uid(),a:map[l.a],b:map[l.b],why:l.why});});
-  return{version:1,topics,items,links,created:today()};
+  return{version:1,topics,items,links,dismissed:[]};
 }
-let failT=0;
+let failT=0,saveT;
 function saveNow(){
+  clearTimeout(saveT);
   S.topics.forEach(t=>{if(t.dumps.length>40)t.dumps=t.dumps.slice(-40);});
   try{localStorage.setItem(LKEY,JSON.stringify(S));}
   catch(e){if(Date.now()-failT>4000){failT=Date.now();toast("Couldn't save. Your phone may be low on storage. Save a backup now.");}}
 }
-let saveT;
-function saveLocal(){clearTimeout(saveT);saveT=setTimeout(saveNow,300);}
+function save(){IDX=null;clearTimeout(saveT);saveT=setTimeout(saveNow,250);}
 window.addEventListener('pagehide',saveNow);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveNow();});
-const putMeta=saveLocal,putItem=()=>saveLocal(),dropItem=()=>saveLocal(),putAll=saveLocal;
-async function getKit(){return KIT;}
+function normalize(o){o.links=o.links||[];o.dismissed=o.dismissed||[];o.topics.forEach(t=>{t.dumps=t.dumps||[];});return o;}
 function boot(){
   let r=null;try{r=localStorage.getItem(LKEY);}catch(e){}
-  if(r){try{S=JSON.parse(r);S.links=S.links||[];}catch(e){S=fromKit(KIT);}}
+  if(r){try{S=normalize(JSON.parse(r));}catch(e){S=fromKit(KIT);}}
   else{S=fromKit(KIT);saveNow();}
   try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}
   if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
   route();
 }
-const backupDue=()=>S.items.length&&(!S.lastBackup||Math.round((new Date(today())-new Date(S.lastBackup))/864e5)>=14);
+const backupDue=()=>S.items.length>0&&(!S.lastBackup||dayDiff(S.lastBackup)>=14);
 
-/* ---------------- UI helpers ---------------- */
+/* ================= Connection finder =================
+   Runs entirely on the phone. Each card is broken into words; words are folded into
+   theological themes (cleanse, clean and pure all count as "purity"), Bible chapters and
+   quoted authors. Themes that are rare across your cards count for more. */
+const THEMES={
+  holiness:'holy holiness holier sanctify sanctified sanctifieth sanctification saint saints consecrate consecrated consecration hallow hallowed sacred godliness',
+  purity:'pure purity purify purified purifieth purifying clean cleanse cleansed cleanseth cleansing undefiled blameless spotless chaste chastity unclean uncleanness defile defiled filthiness filthy wash washed whiter impurity',
+  repentance:'repent repentance repented repenteth repenting penitence penitent contrite contrition confess confessed confession converted conversion turn turned turning return rend mourn mourning sorrow sorrowful',
+  forgiveness:'forgive forgiven forgiveness forgiving forgave pardon pardoned blotted blot remission remit',
+  sin:'sin sins sinned sinner sinners sinful iniquity iniquities transgression transgressions transgress trespass trespasses unrighteousness wickedness wicked ungodliness ungodly evil',
+  grace:'grace gracious graciously favour favor',
+  mercy:'mercy merciful mercies compassion compassionate kindness lovingkindness pity',
+  love:'love loved loveth loving charity beloved',
+  faith:'faith faithful faithfulness believe believed believeth believing belief trust trusted trusteth',
+  righteousness:'righteous righteousness justice justified justify justification upright uprightness',
+  heart:'heart hearts mind minds thoughts inward',
+  lust:'lust lusts lusteth desire desires fornication adultery immorality sensual flesh fleshly',
+  temptation:'tempt tempted temptation temptations flee fled resist snare',
+  fear:'fear feared feareth reverence awe',
+  glory:'glory glorify glorified glorious majesty',
+  scripture:'word words scripture scriptures law commandment commandments statutes precepts testimonies',
+  prayer:'pray prayer prayers prayed praying supplication intercession',
+  peace:'peace peaceable',
+  hope:'hope hoped hopeth',
+  joy:'joy rejoice rejoiced rejoicing gladness glad',
+  humility:'humble humbled humility meek meekness lowly pride proud',
+  obedience:'obey obeyed obedience obedient heed walk walketh keepeth',
+  salvation:'salvation saved save saviour savior redeem redeemed redemption redeemer ransom deliver delivered deliverance',
+  cross:'cross blood sacrifice atonement propitiation lamb crucified',
+  renewal:'renew renewed renewing transformed regeneration reborn',
+  eternity:'eternal everlasting eternity heaven heavenly',
+  world:'world worldly worldliness',
+  suffering:'suffer suffered suffering sufferings affliction afflictions afflicted trial trials tribulation persecution',
+  wisdom:'wisdom wise understanding knowledge prudence discernment'
+};
+const LEX={};Object.entries(THEMES).forEach(([k,v])=>v.split(' ').forEach(w=>LEX[w]=k));
+const STOP=new Set(('a about above after again against all also am an and any are as at be because been before being below between both but by can could did do does doing down during each even ever every few for from further had has have having he her here hers him his how i if in into is it its itself let me more most my no nor not now of off on once only or other our ours out over own same she should so some such than that the their theirs them then there these they this those through to too under until up very was we were what when where which while who whom why will with would you your yours '+
+ 'thee thou thy thine ye hath hast doth dost unto shall shalt art wilt saith said upon therefore wherefore wherewithal thereto thereof whereby verily lo behold us may might things thing one man men lord god jesus christ make made come came go went say also yea nay neither either whatsoever whosoever whoever cometh goeth maketh shalt hath'
+).split(' '));
+const BOOKS=['Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua','Judges','Ruth','1 Samuel','2 Samuel','1 Kings','2 Kings','1 Chronicles','2 Chronicles','Ezra','Nehemiah','Esther','Job','Psalms','Psalm','Proverbs','Ecclesiastes','Song of Solomon','Song of Songs','Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel','Hosea','Joel','Amos','Obadiah','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi','Matthew','Mark','Luke','John','Acts','Romans','1 Corinthians','2 Corinthians','Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians','1 Timothy','2 Timothy','Titus','Philemon','Hebrews','James','1 Peter','2 Peter','1 John','2 John','3 John','Jude','Revelation'];
+const REF_RE=new RegExp('\\b('+BOOKS.slice().sort((a,b)=>b.length-a.length).map(b=>b.replace(/ /g,'\\s*')).join('|')+')\\s+(\\d+)(?::(\\d+))?','gi');
+function bookName(b){b=b.replace(/\s+/g,' ').toLowerCase();const hit=BOOKS.find(x=>x.toLowerCase()===b)||b;return hit==='Psalm'?'Psalms':hit;}
+function stem(w){
+  if(w.length<=4)return w;
+  for(const [suf,rep] of [['iness','y'],['ness',''],['ings',''],['ing',''],['eth',''],['est',''],['ies','y'],['ied','y'],['edst',''],['ed',''],['ly',''],['es',''],['s','']]){
+    if(w.endsWith(suf)&&w.length-suf.length>=3){if(suf==='s'&&/(ss|us|is)$/.test(w))continue;return w.slice(0,-suf.length)+rep;}
+  }
+  return w;
+}
+function feats(text,out,weight=1){
+  // Bible references inside the text
+  String(text).replace(REF_RE,(m,b,ch)=>{const name=bookName(b);add(out,'ref:'+name+' '+ch,1.5*weight,name+' '+ch,'ref');return m;});
+  const words=String(text).replace(REF_RE,' ').toLowerCase().match(/[a-z][a-z'’]*/g)||[];
+  for(let raw of words){
+    raw=raw.replace(/['’]s?$/,'');
+    if(raw.length<3)continue;
+    let th=LEX[raw];
+    if(!th&&STOP.has(raw))continue;
+    const st=stem(raw);
+    th=th||LEX[st];
+    if(th)add(out,'th:'+th,2*weight,raw,'theme');
+    else if(st.length>=4&&!STOP.has(st))add(out,'w:'+st,1*weight,raw,'word');
+  }
+  return out;
+}
+function add(m,key,w,word,kind){let f=m.get(key);if(!f){f={w:0,words:new Set(),kind};m.set(key,f);}f.w+=w;f.words.add(word);}
+function cardFeats(it){
+  const m=new Map();
+  if(it.type==='quote'){const a=it.front.replace(/\(.*?\)/g,'').trim();if(a)add(m,'au:'+a.toLowerCase(),1.5,a,'author');}
+  else feats(it.front,m);
+  feats(it.back,m);
+  return m;
+}
+function nameFeats(name){const m=feats(name,new Map());return new Set(m.keys());}
+
+let IDX=null;
+function index(){
+  if(IDX)return IDX;
+  const cf=new Map(),df=new Map();
+  S.items.forEach(it=>{const f=cardFeats(it);cf.set(it.id,f);f.forEach((_,k)=>df.set(k,(df.get(k)||0)+1));});
+  const N=Math.max(S.items.length,1);
+  const idf=k=>Math.log(1+N/(df.get(k)||1));
+  const tv=new Map(),tn=new Map();
+  S.topics.forEach(t=>{
+    const v=new Map();
+    const addv=(m,mult=1)=>m.forEach((f,k)=>v.set(k,(v.get(k)||0)+f.w*idf(k)*mult));
+    S.items.forEach(it=>{if(it.topicIds.includes(t.id))addv(cf.get(it.id));});
+    if(t.definition)addv(feats(t.definition,new Map()),.8);
+    const nf=nameFeats(t.name);nf.forEach(k=>v.set(k,(v.get(k)||0)+3*idf(k)));
+    tv.set(t.id,v);tn.set(t.id,nf);
+  });
+  IDX={cf,idf,tv,tn};return IDX;
+}
+const norm=v=>Math.sqrt([...v.values()].reduce((s,x)=>s+x*x,0))||1;
+function cos(a,b){let d=0;const [s,l]=a.size<b.size?[a,b]:[b,a];s.forEach((x,k)=>{const y=l.get(k);if(y)d+=x*y;});return d/(norm(a)*norm(b));}
+function weighVec(fm){const {idf}=index();const v=new Map();fm.forEach((f,k)=>v.set(k,f.w*idf(k)));return v;}
+
+const pairKey=(a,b)=>'tt:'+[a,b].sort().join('|');
+const isDismissed=k=>S.dismissed.includes(k);
+const linked=(a,b)=>S.links.some(l=>(l.a===a&&l.b===b)||(l.a===b&&l.b===a));
+
+// Words in a card that match a topic, best first
+function matchTopic(fm,tid){
+  const {tv,tn}=index();const v=tv.get(tid);if(!v)return null;
+  const cv=weighVec(fm);
+  const shared=[...fm.keys()].filter(k=>v.has(k));
+  if(!shared.length)return null;
+  const named=shared.filter(k=>tn.get(tid).has(k));
+  const score=cos(cv,v)+(named.length?.5:0);
+  shared.sort((a,b)=>(named.includes(b)-named.includes(a))||(cv.get(b)*v.get(b)-cv.get(a)*v.get(a)));
+  return{score,shared,named};
+}
+function suggestions(onlyTopic){
+  const {cf,tv,idf}=index();const out=[];
+  // 1. A card that could also be filed under another topic
+  S.items.forEach(it=>{
+    S.topics.forEach(t=>{
+      if(it.topicIds.includes(t.id))return;
+      if(onlyTopic&&t.id!==onlyTopic&&!it.topicIds.includes(onlyTopic))return;
+      const key='ct:'+it.id+'|'+t.id;if(isDismissed(key))return;
+      const m=matchTopic(cf.get(it.id),t.id);if(!m)return;
+      if(!(m.named.length||(m.score>=.24&&m.shared.length>=2)))return;
+      const fm=cf.get(it.id);
+      const words=[...new Set(m.shared.slice(0,3).flatMap(k=>[...fm.get(k).words]))].slice(0,4);
+      const ex=m.named.length?null:S.items.find(o=>o.id!==it.id&&o.topicIds.includes(t.id)&&cf.get(o.id).has(m.shared[0]));
+      out.push({kind:'card',key,score:m.score,item:it,topic:t,words,example:ex});
+    });
+  });
+  // 2. Two topics that look related
+  for(let i=0;i<S.topics.length;i++)for(let j=i+1;j<S.topics.length;j++){
+    const A=S.topics[i],B=S.topics[j];
+    if(onlyTopic&&A.id!==onlyTopic&&B.id!==onlyTopic)continue;
+    if(linked(A.id,B.id)||isDismissed(pairKey(A.id,B.id)))continue;
+    const va=tv.get(A.id),vb=tv.get(B.id);
+    const both=S.items.filter(it=>it.topicIds.includes(A.id)&&it.topicIds.includes(B.id));
+    const shared=[...va.keys()].filter(k=>vb.has(k)).sort((x,y)=>va.get(y)*vb.get(y)-va.get(x)*vb.get(x));
+    const score=cos(va,vb)+.15*both.length;
+    if(!(score>=.2&&(both.length||shared.length>=2)))continue;
+    const top=shared.slice(0,4);
+    const words=[...new Set(top.flatMap(k=>{const w=[];S.items.forEach(it=>{if((it.topicIds.includes(A.id)||it.topicIds.includes(B.id))&&cf.get(it.id).has(k))w.push(...cf.get(it.id).get(k).words);});return w.slice(0,2);}))].slice(0,5);
+    let exA=null,exB=null;
+    if(top[0]){exA=S.items.find(it=>it.topicIds.includes(A.id)&&!it.topicIds.includes(B.id)&&cf.get(it.id).has(top[0]));exB=S.items.find(it=>it.topicIds.includes(B.id)&&!it.topicIds.includes(A.id)&&cf.get(it.id).has(top[0]));}
+    out.push({kind:'pair',key:pairKey(A.id,B.id),score,a:A,b:B,both,words,exA,exB});
+  }
+  return out.sort((x,y)=>y.score-x.score);
+}
+function highlight(text,words,max=220){
+  let t=String(text);
+  if(t.length>max){const lw=t.toLowerCase();let at=Math.min(...words.map(w=>{const i=lw.indexOf(w.toLowerCase());return i<0?1e9:i;}));if(at===1e9)at=0;const st=Math.max(0,at-60);t=(st?'…':'')+t.slice(st,st+max)+(st+max<t.length?'…':'');}
+  let h=esc(t);
+  words.slice().sort((a,b)=>b.length-a.length).forEach(w=>{h=h.replace(new RegExp('\\b('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')\\b','gi'),'<mark>$1</mark>');});
+  return h;
+}
+const cardLabel=it=>it.type==='quote'?it.front.replace(/\(.*?\)/g,'').trim():it.front;
+
+/* ================= UI helpers ================= */
 const topic=id=>S.topics.find(t=>t.id===id);
 const itemsFor=id=>S.items.filter(i=>i.topicIds.includes(id));
 const dueItems=()=>S.items.filter(i=>i.due<=today());
-const frontCls=i=>i.type==='verse'?'ref':i.type==='quote'?'scripture':'';
-const backCls=i=>i.type==='concept'?'':'scripture';
 let toastT;
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600);}
 function ask(o,cb){
   const i=$('#sh-i'),ok=$('#sh-o');
   $('#sh-t').textContent=o.title;$('#sh-b').textContent=o.body||'';$('#sh-b').hidden=!o.body;
-  i.hidden=!('value' in o);i.value=o.value||'';
-  ok.textContent=o.ok||'Confirm';ok.className=o.danger?'danger-btn':'primary';
+  i.hidden=!('value' in o);i.value=o.value||'';i.placeholder=o.placeholder||'';
+  ok.textContent=o.ok||'Confirm';ok.className='btn '+(o.danger?'danger':'primary');
   $('#sheet').hidden=false;if(!i.hidden)setTimeout(()=>i.focus(),50);
-  ok.onclick=()=>{$('#sheet').hidden=true;cb(i.value);};
+  ok.onclick=()=>{if(!i.hidden&&o.required&&!i.value.trim()){i.focus();return;}$('#sheet').hidden=true;cb(i.value);};
   $('#sh-c').onclick=()=>{$('#sheet').hidden=true;};
 }
 
-/* ---------------- Router (in-page) ---------------- */
+/* ================= Navigation ================= */
 let stack=['home'];
 const cur=()=>stack[stack.length-1];
 function go(p){if(cur()!==p)stack.push(p);if(stack.length>40)stack.shift();route();}
 function back(){if(stack.length>1)stack.pop();route();}
 function tab(p){stack=[p];route();}
-function nav(active){
-  const L=[['home','⌂','Topics'],['review','↻','Review'],['add','＋','Add'],['dump','◎','Recall'],['more','⋯','More']];
-  return `<nav class="bottom">${L.map(([h,i,t])=>`<button class="${active===h?'on':''}" onclick="tab('${h}')"><span class="ic" aria-hidden="true">${i}</span>${t}</button>`).join('')}</nav>`;
+function bar(active){
+  const due=dueItems().length;
+  const L=[['home','Topics'],['review','Review'+(due?`<sup>${due}</sup>`:'')],['add','Add'],['dump','Recall'],['links','Links']];
+  return `<nav class="bar">${L.map(([h,t])=>`<button class="${active===h?'on':''}" onclick="tab('${h}')">${t}</button>`).join('')}</nav>`;
 }
-function render(html,active,keep){const y=window.scrollY;app.innerHTML=`<main>${html}</main>`+nav(active);window.scrollTo(0,keep?y:0);}
-const backBtn=label=>stack.length>1?`<button class="backlink" onclick="back()">‹ ${label}</button>`:'';
+let KEEP=false;
+function render(html,active,keep){const y=window.scrollY;app.innerHTML=`<main>${html}</main>`+bar(active);window.scrollTo(0,(keep||KEEP)?y:0);}
+const backBtn=(label='Back')=>stack.length>1?`<button class="backbtn" onclick="back()">${CHEV}${esc(label)}</button>`:'';
 
-/* ---------------- Home ---------------- */
+/* ================= Topics (home) ================= */
 function vHome(){
   rv=null;
   const due=dueItems().length;
   const sug=[...S.topics].filter(t=>itemsFor(t.id).length).sort((a,b)=>(a.lastDump||'').localeCompare(b.lastDump||''))[0];
-  let h=`<div><h1>Treasury</h1><p class="motto">Things new and old · <span class="ref">Matt. 13:52</span></p></div>`;
-  if(!S.topics.length){
-    h+=`<div class="leaf"><p class="big">Start with one topic.</p><p class="sub">Name something you want to be able to speak about, such as Grace or Prayer. Then add its key verses, concepts and quotes.</p></div>`;
-  }else{
-    h+=`<div class="leaf"><div class="row between"><div><div class="stat">${due}</div><div class="tiny">card${due===1?'':'s'} due today</div></div>${due?`<button class="primary" onclick="tab('review')">Start review</button>`:'<span class="sub">All caught up</span>'}</div></div>`;
-    if(sug)h+=`<div class="leaf"><h3>Recall practice</h3><p>${sug.lastDump?`You last explained <b>${esc(sug.name)}</b> from memory ${daysAgo(sug.lastDump)}.`:`You haven't explained <b>${esc(sug.name)}</b> from memory yet.`}</p><button class="primary full" onclick="go('dump/${sug.id}')">Explain ${esc(sug.name)} now</button></div>`;
-    h+=`<h2>Topics</h2>`;
-    h+=S.topics.map(t=>{const n=itemsFor(t.id).length,last=t.dumps[t.dumps.length-1];return `<button class="topic-link" onclick="go('topic/${t.id}')"><span class="grow"><span class="name">${esc(t.name)}</span><br><span class="tiny">${n} card${n===1?'':'s'}${last?` · last recall ${last.score}/${last.total}`:''}</span></span><span class="chev">›</span></button>`;}).join('');
+  const sc=suggestions().length;
+  let h=`<header class="mast"><div class="mast-top"><div class="wordmark">Treasury</div><button class="link small" onclick="go('more')">Backup</button></div>
+    <p class="mast-verse">…bringeth forth out of his treasure things new and old. <span class="ref">Matthew 13:52</span></p></header>`;
+  if(S.topics.length){
+    h+=`<section>`;
+    h+=due?`<p class="lead">${due===1?'One card is':plural(due,'card')+' are'} waiting for review.</p><div class="actions"><button class="btn primary" onclick="tab('review')">Begin review</button></div>`
+          :`<p class="lead">You've reviewed everything due today.</p>`;
+    h+=`</section>`;
+    if(sug)h+=`<section class="note"><p>${sug.lastDump?`You last explained ${esc(sug.name)} from memory ${daysAgo(sug.lastDump)}.`:`You haven't explained ${esc(sug.name)} from memory yet.`}</p><button class="link" style="align-self:flex-start" onclick="go('dump/${sug.id}')">Explain ${esc(sug.name)} now</button></section>`;
+    if(sc)h+=`<section class="note"><p>Treasury found ${sc===1?'a possible link':plural(sc,'possible link')} between your cards and topics.</p><button class="link" style="align-self:flex-start" onclick="tab('links')">See ${sc===1?'the suggestion':'the suggestions'}</button></section>`;
+    if(backupDue())h+=`<section class="note"><p>Your cards are stored only on this phone. Save a backup so you can't lose them.</p><button class="link" style="align-self:flex-start" onclick="go('more')">Back up now</button></section>`;
   }
-  h+=`<div class="row"><input id="nt" class="grow" placeholder="New topic, e.g. Grace" style="flex:1" onkeydown="if(event.key==='Enter')addTopic()"><button onclick="addTopic()">Add topic</button></div>`;
-  if(backupDue())h+=`<div class="leaf"><p><b>Time for a backup.</b> Your cards live only on this phone. Save a copy so you never lose them.</p><button onclick="tab('more')">Back up now</button></div>`;
+  h+=`<section><h2>Topics</h2>`;
+  if(S.topics.length)h+=`<div class="index">${S.topics.map(t=>{const n=itemsFor(t.id).length,last=t.dumps[t.dumps.length-1];
+    return `<button class="ix" onclick="go('topic/${t.id}')"><span class="ix-body"><span class="ix-name">${esc(t.name)}</span><span class="ix-meta">${plural(n,'card')}${last?`, recalled ${last.score} of ${last.total} last time`:''}</span></span><span class="tab" aria-hidden="true">${esc(t.name.trim()[0]||'?').toUpperCase()}</span></button>`;}).join('')}</div>`;
+  else h+=`<p class="empty">Name something you want to be able to speak about, like Grace or Prayer. Then add its key verses, concepts and quotes.</p>`;
+  h+=`<form class="inline-form" onsubmit="event.preventDefault();addTopic()"><input id="nt" placeholder="New topic" aria-label="New topic name"><button class="btn" type="submit">Add topic</button></form></section>`;
   render(h,'home');
 }
 function addTopic(){
   const n=$('#nt').value.trim();if(!n)return;
-  if(S.topics.some(t=>t.name.toLowerCase()===n.toLowerCase()))return toast('That topic already exists');
-  const t={id:uid(),name:n,definition:'',dumps:[],lastDump:null};S.topics.push(t);putMeta();go('topic/'+t.id);
+  if(S.topics.some(t=>t.name.toLowerCase()===n.toLowerCase()))return toast('You already have a topic called '+n);
+  const t={id:uid(),name:n,definition:'',dumps:[],lastDump:null};S.topics.push(t);save();go('topic/'+t.id);
 }
 
-/* ---------------- Topic hub ---------------- */
+/* ================= Topic page ================= */
+function entryHtml(i){
+  if(i.type==='verse')return `<button class="entry" onclick="go('edit/${i.id}')"><span class="ref">${esc(i.front)}</span><span class="text">${esc(i.back)}</span></button>`;
+  if(i.type==='quote')return `<button class="entry" onclick="go('edit/${i.id}')"><span class="text quote">${esc(i.back)}</span><span class="by">${esc(i.front)}${i.source?', '+esc(i.source):''}</span></button>`;
+  return `<button class="entry" onclick="go('edit/${i.id}')"><span class="name">${esc(i.front)}</span><span class="plain">${esc(i.back)}</span></button>`;
+}
 function vTopic(id,keep){
   const t=topic(id);if(!t)return tab('home');
   const its=itemsFor(id);
-  const sec=(type,label)=>{const L=its.filter(i=>i.type===type);return `<div class="leaf"><div class="row between"><h3>${label}</h3><button class="quiet" onclick="go('add/${type}/${id}')">＋ Add</button></div><div>${L.length?L.map(itemRow).join(''):'<p class="tiny">None yet.</p>'}</div></div>`;};
+  const count=k=>its.filter(i=>i.type===k).length;
+  const sec=(type,label,addLabel)=>{const L=its.filter(i=>i.type===type);return `<section><div class="head-row"><h2>${label}</h2><button class="link" onclick="go('add/${type}/${id}')">${addLabel}</button></div>${L.length?`<div class="entries">${L.map(entryHtml).join('')}</div>`:'<p class="empty">None yet.</p>'}</section>`;};
   const links=S.links.filter(l=>l.a===id||l.b===id);
-  const others=S.topics.filter(o=>o.id!==id);
-  let h=backBtn('Back')+`<h1>${esc(t.name)}</h1>`;
-  h+=`<div class="leaf"><h3>In my own words</h3><textarea id="def" rows="4" placeholder="What is ${esc(t.name.toLowerCase())}? Write it without looking anything up." oninput="saveDef('${id}')">${esc(t.definition)}</textarea></div>`;
-  h+=sec('verse','Key verses')+sec('concept','Concepts')+sec('quote','Quotes');
-  h+=`<div class="leaf"><h3>Connections</h3><div>${links.map(l=>{const o=topic(l.a===id?l.b:l.a);return o?`<div class="item" style="cursor:default"><button class="quiet" style="align-self:flex-start;padding:0" onclick="go('topic/${o.id}')">→ ${esc(o.name)}</button><div>${esc(l.why)}</div><button class="danger" style="align-self:flex-start;padding:4px 0" onclick="delLink('${l.id}','${id}')">Remove</button></div>`:'';}).join('')||'<p class="tiny">No connections yet.</p>'}</div>
-  ${others.length?`<select id="lt" aria-label="Topic to connect">${others.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('')}</select><input id="lw" placeholder="Why do they connect? One sentence."><button class="full" onclick="addLink('${id}')">Add connection</button>`:''}</div>`;
-  h+=`<button class="primary full" onclick="go('dump/${id}')">Explain ${esc(t.name)} from memory</button>`;
-  if(t.dumps.length)h+=`<div class="leaf"><h3>Recall history</h3><div class="history">${t.dumps.slice(-6).reverse().map(d=>`<span>${d.date}</span><b>${d.score}/${d.total}</b>`).join('')}</div></div>`;
-  h+=`<div class="row" style="justify-content:center"><button class="quiet" onclick="renameTopic('${id}')">Rename</button><button class="danger" onclick="delTopic('${id}')">Delete topic</button></div>`;
+  const sugg=suggestions(id).slice(0,3);
+  let h=backBtn('Topics');
+  h+=`<header class="topic-head"><span class="initial" aria-hidden="true">${esc(t.name.trim()[0]||'')}</span><div><h1>${esc(t.name)}</h1><p class="muted small">${plural(count('verse'),'verse')}, ${plural(count('concept'),'concept')}, ${plural(count('quote'),'quote')}</p></div></header>`;
+  h+=`<section><label for="def" class="label">In your own words</label><textarea id="def" class="writing" rows="4" placeholder="What is ${esc(t.name.toLowerCase())}? Write it without looking anything up." oninput="saveDef('${id}')">${esc(t.definition)}</textarea></section>`;
+  h+=sec('verse','Verses','Add verse')+sec('concept','Concepts','Add concept')+sec('quote','Quotes','Add quote');
+  h+=`<section><div class="head-row"><h2>Linked topics</h2>${S.topics.length>1?`<button class="link" onclick="linkSheet('${id}')">Link a topic</button>`:''}</div>
+    ${links.length?links.map(l=>{const o=topic(l.a===id?l.b:l.a);return o?`<div class="chain"><button class="pair" onclick="go('topic/${o.id}')">${esc(o.name)}</button><p class="why">${esc(l.why)}</p><button class="link danger small" style="align-self:flex-start" onclick="delLink('${l.id}')">Remove link</button></div>`:'';}).join(''):'<p class="empty">No linked topics yet.</p>'}</section>`;
+  if(sugg.length)h+=`<section><h2>Suggested links</h2>${sugg.map(suggHtml).join('')}</section>`;
+  h+=`<section><button class="btn primary block" onclick="go('dump/${id}')">Explain ${esc(t.name)} from memory</button></section>`;
+  if(t.dumps.length)h+=`<section><h2>Recall history</h2><div class="history">${t.dumps.slice(-6).reverse().map(d=>`<span>${d.date}</span><span>${d.score} of ${d.total}</span>`).join('')}</div></section>`;
+  h+=`<div class="actions" style="justify-content:center;gap:24px"><button class="link" onclick="renameTopic('${id}')">Rename topic</button><button class="link danger" onclick="delTopic('${id}')">Delete topic</button></div>`;
   render(h,'home',keep);
 }
-function itemRow(i){return `<div class="item" onclick="go('edit/${i.id}')"><div class="${frontCls(i)}"><b>${esc(i.front)}</b></div><div class="${backCls(i)} back-text">${esc(i.back)}</div>${i.source?`<div class="tiny">${esc(i.source)}</div>`:''}</div>`;}
-function saveDef(id){topic(id).definition=$('#def').value;putMeta();}
-function addLink(id){
-  const b=$('#lt').value,why=$('#lw').value.trim();
-  if(!why)return toast('Add one sentence on why they connect');
-  S.links.push({id:uid(),a:id,b,why});putMeta();vTopic(id,true);
+let defT;
+function saveDef(id){topic(id).definition=$('#def').value;clearTimeout(defT);defT=setTimeout(save,400);}
+function linkSheet(id,other){
+  const t=topic(id);
+  const others=S.topics.filter(o=>o.id!==id&&!linked(id,o.id));
+  if(!others.length)return toast(t.name+' is already linked to every topic');
+  const sel=other||others[0].id;
+  const sh=$('#sheet');
+  $('#sh-t').textContent='Link '+t.name;
+  $('#sh-b').hidden=false;
+  $('#sh-b').innerHTML=`<select id="lk-t" aria-label="Topic to link" style="margin-bottom:10px">${others.map(o=>`<option value="${o.id}" ${o.id===sel?'selected':''}>${esc(o.name)}</option>`).join('')}</select><textarea id="lk-w" rows="3" placeholder="Why do they belong together? One sentence in your own words."></textarea>`;
+  $('#sh-i').hidden=true;
+  const ok=$('#sh-o');ok.textContent='Save link';ok.className='btn primary';
+  sh.hidden=false;setTimeout(()=>$('#lk-w').focus(),50);
+  ok.onclick=()=>{const why=$('#lk-w').value.trim();if(!why){$('#lk-w').focus();return toast('Write one sentence on why. Putting it in your own words is what makes it stick.');}
+    S.links.push({id:uid(),a:id,b:$('#lk-t').value,why});save();sh.hidden=true;toast('Linked');route(true);};
+  $('#sh-c').onclick=()=>{sh.hidden=true;};
 }
-function delLink(lid,id){S.links=S.links.filter(l=>l.id!==lid);putMeta();vTopic(id,true);}
-function renameTopic(id){const t=topic(id);ask({title:'Rename topic',value:t.name,ok:'Rename'},v=>{v=v.trim();if(v){t.name=v;putMeta();vTopic(id,true);}});}
+function delLink(lid){S.links=S.links.filter(l=>l.id!==lid);save();route(true);}
+function renameTopic(id){const t=topic(id);ask({title:'Rename topic',value:t.name,ok:'Rename',required:true},v=>{v=v.trim();if(v){t.name=v;save();route(true);}});}
 function delTopic(id){
   const t=topic(id);
   ask({title:`Delete ${t.name}?`,body:'Cards that belong only to this topic will be deleted too.',ok:'Delete',danger:true},()=>{
-    S.items.forEach(i=>{if(i.topicIds.includes(id)){i.topicIds=i.topicIds.filter(x=>x!==id);i.topicIds.length?putItem(i):dropItem(i.id);}});
+    S.items.forEach(i=>i.topicIds=i.topicIds.filter(x=>x!==id));
     S.items=S.items.filter(i=>i.topicIds.length);
     S.links=S.links.filter(l=>l.a!==id&&l.b!==id);
-    S.topics=S.topics.filter(x=>x.id!==id);putMeta();tab('home');
+    S.topics=S.topics.filter(x=>x.id!==id);save();tab('home');
   });
 }
 
-/* ---------------- Add / edit ---------------- */
+/* ================= Suggestions UI ================= */
+function suggHtml(s){
+  if(s.kind==='card'){
+    const it=s.item;
+    return `<div class="sugg"><p class="pair">File ${it.type==='verse'?`<span class="ref">${esc(it.front)}</span>`:esc(cardLabel(it))} under ${esc(s.topic.name)} too?</p>
+      <p class="snippet">${highlight(it.back,s.words)}</p>
+      <p class="small muted">${s.example?`${esc(cardLabel(s.example))} in ${esc(s.topic.name)} uses the same ${s.words.length>1?'words':'word'}.`:`The highlighted ${s.words.length>1?'words match':'word matches'} the theme of ${esc(s.topic.name)}.`}</p>
+      <div class="actions"><button class="btn primary" onclick="acceptCard('${it.id}','${s.topic.id}')">Add to ${esc(s.topic.name)}</button><button class="link" onclick="dismiss('${s.key}')">Not related</button></div></div>`;
+  }
+  const ex=s.exA&&s.exB?`For example, ${esc(cardLabel(s.exA))} and ${esc(cardLabel(s.exB))}.`:'';
+  return `<div class="sugg"><p class="pair">${esc(s.a.name)} and ${esc(s.b.name)}</p>
+    ${s.both.length?`<p class="small">${s.both.slice(0,2).map(i=>esc(cardLabel(i))).join(' and ')} ${s.both.length===1?'is':'are'} filed under both.</p>`:''}
+    ${s.words.length?`<div class="words" aria-label="Shared words">${s.words.map(w=>`<span class="word">${esc(w)}</span>`).join('')}</div>`:''}
+    ${ex?`<p class="small muted">${ex}</p>`:''}
+    <div class="actions"><button class="btn primary" onclick="linkSheet('${s.a.id}','${s.b.id}')">Link them</button><button class="link" onclick="dismiss('${s.key}')">Not related</button></div></div>`;
+}
+function acceptCard(cid,tid){const it=S.items.find(i=>i.id===cid);if(!it)return;if(!it.topicIds.includes(tid))it.topicIds.push(tid);save();toast('Added to '+topic(tid).name);route(true);}
+function dismiss(k){S.dismissed.push(k);save();route(true);}
+function vLinks(){
+  const sg=suggestions().slice(0,15);
+  let h=`<h1>Links</h1><p class="muted">Treasury reads your cards for shared words and themes, such as cleanse and pure, or two verses from the same chapter, and suggests where they connect. You decide what's really related.</p>`;
+  h+=`<section><h2>Suggestions</h2>${sg.length?sg.map(suggHtml).join(''):'<p class="empty">No new suggestions. Add more cards and Treasury will look again.</p>'}</section>`;
+  h+=`<section><h2>Your linked topics</h2>${S.links.length?S.links.map(l=>{const a=topic(l.a),b=topic(l.b);return a&&b?`<div class="chain"><button class="pair" onclick="go('topic/${a.id}')">${esc(a.name)} and ${esc(b.name)}</button><p class="why">${esc(l.why)}</p></div>`:'';}).join(''):'<p class="empty">None yet. Accept a suggestion or link topics from a topic page.</p>'}</section>`;
+  if(S.dismissed.length)h+=`<button class="link" style="align-self:flex-start" onclick="S.dismissed=[];save();route()">Show suggestions you marked as not related</button>`;
+  render(h,'links');
+}
+
+/* ================= Add / edit ================= */
 let form=null;
 const LABELS={verse:['Reference','e.g. Psalm 51:10','Verse text','Type or paste the verse'],concept:['Concept','e.g. Godly vs worldly sorrow','Explanation','In your own words'],quote:['Author','e.g. Charles Spurgeon','Quote','The quote, word for word']};
 function vAdd(type,topicId,editId){
@@ -263,31 +537,59 @@ function vAdd(type,topicId,editId){
 }
 function drawForm(v,keep){
   const [fl,fp,bl,bp]=LABELS[form.type];
-  let h=backBtn('Back')+`<h1>${form.editId?'Edit card':'Add to your treasury'}</h1>`;
-  if(!S.topics.length){render(h+`<div class="leaf"><p>Create a topic first, then add verses, concepts and quotes to it.</p><button class="primary" onclick="tab('home')">Go to topics</button></div>`,'add');return;}
-  h+=`<div class="seg">${['verse','concept','quote'].map(t=>`<button class="${form.type===t?'primary':''}" onclick="setType('${t}')">${t[0].toUpperCase()+t.slice(1)}</button>`).join('')}</div>
-  <div class="field"><label for="f">${fl}</label><input id="f" value="${esc(v.front)}" placeholder="${fp}"></div>
-  <div class="field"><label for="b">${bl}</label><textarea id="b" rows="5" placeholder="${bp}">${esc(v.back)}</textarea></div>
-  <div class="field"><label>Topics</label><div class="chips">${S.topics.map(t=>`<button class="chip ${form.topics.has(t.id)?'sel':''}" onclick="togTopic('${t.id}')">${esc(t.name)}</button>`).join('')}</div></div>
-  <div class="field"><label for="s">Source <span class="tiny">(optional)</span></label><input id="s" value="${esc(v.source)}" placeholder="Book, sermon or chapter"></div>
-  <button class="primary full" onclick="saveCard()">Save</button>
-  ${form.editId?`<button class="danger" style="align-self:center" onclick="delCard()">Delete this card</button>`:''}`;
+  let h=backBtn()+`<h1>${form.editId?'Edit card':'Add a card'}</h1>`;
+  if(!S.topics.length){render(h+`<p>Create a topic first, then add verses, concepts and quotes to it.</p><div class="actions"><button class="btn primary" onclick="tab('home')">Go to topics</button></div>`,'add');return;}
+  h+=`<div class="seg" role="group" aria-label="Card type">${['verse','concept','quote'].map(t=>`<button class="${form.type===t?'on':''}" onclick="setType('${t}')">${t[0].toUpperCase()+t.slice(1)}</button>`).join('')}</div>
+  <div class="field"><label for="f">${fl}</label><input id="f" value="${esc(v.front)}" placeholder="${fp}" oninput="suggestTopics()"></div>
+  <div class="field"><label for="b">${bl}</label><textarea id="b" rows="5" placeholder="${bp}" oninput="suggestTopics()">${esc(v.back)}</textarea></div>
+  <div class="field"><span class="label">Topics</span><div class="chips" id="chips">${chipsHtml()}</div><div id="sugg-line" style="margin-top:10px"></div></div>
+  <div class="field"><label for="s">Source (optional)</label><input id="s" value="${esc(v.source)}" placeholder="Book, sermon or chapter"></div>
+  <button class="btn primary block" onclick="saveCard()">Save card</button>`;
+  if(form.editId){
+    const rel=related(form.editId);
+    if(rel.length)h+=`<section><h2>Related cards</h2><div class="entries">${rel.map(r=>`<button class="entry" onclick="go('edit/${r.it.id}')"><span class="${r.it.type==='verse'?'ref':'name'}">${esc(cardLabel(r.it))}</span><span class="small muted">Shares ${r.words.map(esc).join(', ')}</span></button>`).join('')}</div></section>`;
+    h+=`<button class="link danger" style="align-self:center" onclick="delCard()">Delete this card</button>`;
+  }
   render(h,form.editId?'home':'add',keep);
+  suggestTopics(true);
+}
+const chipsHtml=(hints=new Set())=>S.topics.map(t=>`<button class="chip ${form.topics.has(t.id)?'sel':''} " onclick="togTopic('${t.id}')">${esc(t.name)}</button>`).join('');
+let sugT,hints=new Set();
+function suggestTopics(now){
+  clearTimeout(sugT);
+  sugT=setTimeout(()=>{
+    const fEl=$('#f'),bEl=$('#b');if(!fEl)return;
+    const draft={type:form.type,front:fEl.value,back:bEl.value};
+    const fm=cardFeats(draft);
+    const res=[];
+    if(fm.size)S.topics.forEach(t=>{if(form.topics.has(t.id))return;const m=matchTopic(fm,t.id);if(m&&(m.named.length||m.score>=.18)){const w=[...fm.get(m.shared[0]).words][0];res.push({t,score:m.score,w});}});
+    res.sort((a,b)=>b.score-a.score);
+    const top=res.slice(0,3);hints=new Set(top.map(r=>r.t.id));
+    $('#chips').innerHTML=chipsHtml(hints);
+    $('#sugg-line').innerHTML=top.length?`<span>Suggested from your words:</span>${top.map(r=>`<button class="chip hint" onclick="togTopic('${r.t.id}')">${esc(r.t.name)} <span class="muted">${esc(r.w)}</span></button>`).join('')}`:'';
+  },now===true?0:300);
+}
+function related(id){
+  const {cf}=index();const me=S.items.find(i=>i.id===id);if(!me)return[];
+  const mv=weighVec(cf.get(id));
+  return S.items.filter(o=>o.id!==id).map(o=>{const ov=weighVec(cf.get(o.id));const sh=[...cf.get(id).keys()].filter(k=>ov.has(k));
+    return{it:o,score:cos(mv,ov),words:[...new Set(sh.flatMap(k=>[...cf.get(o.id).get(k).words]))].slice(0,3)};})
+    .filter(r=>r.score>=.12&&r.words.length).sort((a,b)=>b.score-a.score).slice(0,3);
 }
 const curVals=()=>({front:$('#f').value,back:$('#b').value,source:$('#s').value});
 function setType(t){const v=curVals();form.type=t;drawForm(v,true);}
-function togTopic(id){const v=curVals();form.topics.has(id)?form.topics.delete(id):form.topics.add(id);drawForm(v,true);}
+function togTopic(id){form.topics.has(id)?form.topics.delete(id):form.topics.add(id);$('#chips').innerHTML=chipsHtml(hints);suggestTopics(true);}
 function saveCard(){
   const v=curVals();for(const k in v)v[k]=v[k].trim();
   if(!v.front||!v.back)return toast('Fill in both fields');
   if(!form.topics.size)return toast('Pick at least one topic');
-  if(form.editId){const it=S.items.find(i=>i.id===form.editId);Object.assign(it,{type:form.type,...v,topicIds:[...form.topics]});putItem(it);toast('Saved');back();return;}
-  const it=newItem(form.type,v.front,v.back,[...form.topics],v.source);S.items.push(it);putItem(it);toast('Saved');
-  if(form.ret)back();else drawForm({source:v.source});
+  if(form.editId){Object.assign(S.items.find(i=>i.id===form.editId),{type:form.type,...v,topicIds:[...form.topics]});save();toast('Card saved');back();return;}
+  S.items.push(newItem(form.type,v.front,v.back,[...form.topics],v.source));save();toast('Card saved');
+  if(form.ret)back();else{form.topics=new Set(form.topics);drawForm({source:v.source});}
 }
-function delCard(){ask({title:'Delete this card?',ok:'Delete',danger:true},()=>{const id=form.editId;S.items=S.items.filter(i=>i.id!==id);dropItem(id);back();});}
+function delCard(){ask({title:'Delete this card?',ok:'Delete',danger:true},()=>{const id=form.editId;S.items=S.items.filter(i=>i.id!==id);save();back();});}
 
-/* ---------------- Spaced review ---------------- */
+/* ================= Review ================= */
 let rv=null;
 function schedule(it,r){
   let{ease,interval,reps,lapses}=it;
@@ -298,33 +600,36 @@ function schedule(it,r){
   return{ease,interval,reps,lapses,due:addDays(interval)};
 }
 function vReview(){
-  if(!rv)rv={queue:shuffle(dueItems().map(i=>i.id)),done:0,shown:false,hint:false};
+  if(!rv)rv={queue:shuffle(dueItems().map(i=>i.id)),done:0,total:0,shown:false,hint:false};
+  if(!rv.total)rv.total=rv.queue.length;
   const it=S.items.find(i=>i.id===rv.queue[0]);
-  if(!it){const d=rv.done;rv=null;return render(`<h1>Review</h1><div class="leaf"><p class="big">${d?`Done. ${d} card${d===1?'':'s'} reviewed.`:'Nothing due right now.'}</p><p class="sub">Next, explain a topic from memory. It's the practice closest to actually speaking about it.</p><button class="primary full" onclick="tab('dump')">Recall a topic</button></div>`,'review');}
+  if(!it){const d=rv.done;rv=null;return render(`<h1>Review</h1><p class="lead">${d?`Done. You reviewed ${plural(d,'card')}.`:'Nothing to review right now.'}</p><p>Next, try explaining a topic from memory. It's the closest practice to actually speaking about it.</p><div class="actions"><button class="btn primary" onclick="tab('dump')">Recall a topic</button></div>`,'review');}
   const tn=it.topicIds.map(t=>topic(t)?.name).filter(Boolean);
-  const q=it.type==='verse'?`Recite <span class="ref" style="font-size:24px">${esc(it.front)}</span>`:it.type==='quote'?`Quote <b>${esc(it.front)}</b>`:`Explain <b>${esc(it.front)}</b>`;
-  let h=`<div class="row between"><h1>Review</h1><span class="tiny">${rv.queue.length} left</span></div>
-  <div class="leaf"><h3>${it.type} · ${tn.map(esc).join(', ')}</h3><div class="big">${q}</div>`;
-  if(rv.shown)h+=`<div class="answer ${backCls(it)}">${esc(it.back)}</div>${it.source?`<div class="tiny">${esc(it.source)}</div>`:''}`;
-  else if(rv.hint)h+=`<div class="answer scripture hint">${esc(hint(it.back))}</div>`;
+  const q=it.type==='verse'?`Recite <span class="ref">${esc(it.front)}</span>`:it.type==='quote'?`What did ${esc(cardLabel(it))} say?`:`Explain ${esc(it.front)}`;
+  const pct=Math.round(100*rv.done/Math.max(rv.total,1));
+  let h=`<div class="head-row"><h1>Review</h1><span class="muted small">${rv.queue.length} left</span></div><div class="progress" aria-hidden="true"><span style="width:${pct}%"></span></div>
+  <div class="page"><p class="muted small">${esc(tn.join(', '))}</p><p class="prompt">${q}</p>`;
+  if(rv.shown)h+=`<div class="answer ${it.type==='concept'?'plain':''}">${esc(it.back)}</div>${it.source?`<p class="muted small">${esc(it.source)}</p>`:''}`;
+  else if(rv.hint)h+=`<div class="answer hint">${esc(hint(it.back))}</div>`;
   h+=`</div>`;
-  if(!rv.shown)h+=`<div class="row"><button style="flex:1" onclick="rv.hint=true;vReview()">First letters</button><button class="primary" style="flex:2" onclick="rv.shown=true;vReview()">Show answer</button></div><p class="tiny" style="text-align:center">Say it out loud before you reveal it.</p>`;
-  else h+=`<div class="rate">${['Again','Hard','Good','Easy'].map((l,r)=>`<button onclick="rate(${r})"><span>${l}</span><span class="tiny">${ivl(schedule(it,r).interval)}</span></button>`).join('')}</div>`;
+  if(!rv.shown)h+=`<div class="actions"><button class="btn" style="flex:1" onclick="rv.hint=true;vReview()">First letters</button><button class="btn primary" style="flex:2" onclick="rv.shown=true;vReview()">Show answer</button></div><p class="muted small">Say it out loud before you check.</p>`;
+  else h+=`<div class="rate">${['Forgot','Hard','Good','Easy'].map((l,r)=>`<button class="btn" onclick="rate(${r})"><span>${l}</span><small>${ivl(schedule(it,r).interval)}</small></button>`).join('')}</div>`;
   render(h,'review');
 }
 function rate(r){
   const it=S.items.find(i=>i.id===rv.queue[0]);
-  Object.assign(it,schedule(it,r));putItem(it);
+  Object.assign(it,schedule(it,r));save();
   rv.queue.shift();if(r===0)rv.queue.push(it.id);else rv.done++;
   rv.shown=false;rv.hint=false;vReview();
 }
 
-/* ---------------- Recall ---------------- */
+/* ================= Recall ================= */
 let dp=null,timerInt=null;
 function vDumpPick(){
   const L=[...S.topics].sort((a,b)=>(a.lastDump||'').localeCompare(b.lastDump||''));
-  let h=`<h1>Recall</h1><p class="sub">Pick a topic and explain everything you know about it from memory, as if you were teaching it. Then check what you missed.</p>`;
-  h+=L.length?L.map(t=>`<button class="topic-link" onclick="go('dump/${t.id}')"><span class="grow"><span class="name">${esc(t.name)}</span><br><span class="tiny">${t.lastDump?'Last recalled '+daysAgo(t.lastDump):'Never recalled'}</span></span><span class="chev">›</span></button>`).join(''):`<div class="leaf"><p>Add a topic first.</p><button class="primary" onclick="tab('home')">Go to topics</button></div>`;
+  let h=`<h1>Recall</h1><p class="muted">Pick a topic and explain everything you know about it, as if you were teaching it. Then check what you left out.</p>`;
+  h+=L.length?`<div class="index">${L.map(t=>`<button class="ix" onclick="go('dump/${t.id}')"><span class="ix-body"><span class="ix-name">${esc(t.name)}</span><span class="ix-meta">${t.lastDump?'Last recalled '+daysAgo(t.lastDump):'Never recalled'}</span></span><span class="tab" aria-hidden="true">${esc(t.name.trim()[0]||'?').toUpperCase()}</span></button>`).join('')}</div>`
+    :`<p class="empty">Add a topic first.</p><div class="actions"><button class="btn primary" onclick="tab('home')">Go to topics</button></div>`;
   render(h,'dump');
 }
 function vDump(id){
@@ -332,21 +637,22 @@ function vDump(id){
   if(!dp||dp.id!==id)dp={id,phase:1,text:'',left:120,got:new Set()};
   let h;
   if(dp.phase===1){
-    h=backBtn('Back')+`<h1>Explain ${esc(t.name)}</h1>
-    <p class="sub">Without looking, cover what it is, key verses, quotes, and how it connects to other topics. Say it out loud, as if to a friend.</p>
-    <div class="leaf"><div class="timer" id="tm">${fmt(dp.left)}</div>
-    <button class="full" id="tb" onclick="toggleTimer()">${timerInt?'Pause':dp.left<120?'Resume':'Start 2-minute timer'}</button></div>
-    <div class="field"><label for="dt">Notes <span class="tiny">(optional)</span></label><textarea id="dt" rows="6" placeholder="Jot down what comes to mind…" oninput="dp.text=this.value">${esc(dp.text)}</textarea></div>
-    <button class="primary full" onclick="dumpCheck()">I'm done, check my hub</button>`;
+    h=backBtn()+`<h1>Explain ${esc(t.name)}</h1>
+    <p>Without looking, cover what it is, the key verses and quotes, and how it connects to other topics. Say it out loud, as if to a friend.</p>
+    <section style="align-items:flex-start"><div class="timer" id="tm">${fmt(dp.left)}</div>
+    <button class="btn" id="tb" onclick="toggleTimer()">${timerInt?'Pause':dp.left<120?'Resume':'Start 2-minute timer'}</button></section>
+    <div class="field"><label for="dt">Notes (optional)</label><textarea id="dt" class="writing" rows="6" placeholder="Jot down what comes to mind" oninput="dp.text=this.value">${esc(dp.text)}</textarea></div>
+    <button class="btn primary block" onclick="dumpCheck()">Check what I covered</button>`;
   }else{
     const its=itemsFor(id);
     const links=S.links.filter(l=>l.a===id||l.b===id);
-    const row=(key,title,body,fc='',bc='')=>`<label class="check"><input type="checkbox" ${dp.got.has(key)?'checked':''} onchange="togGot('${key}',this.checked)"><span class="grow"><span class="${fc}"><b>${esc(title)}</b></span><br><span class="sub ${bc}">${esc(body)}</span></span></label>`;
-    h=`<h1>${esc(t.name)}: what did you recall?</h1><p class="sub">Tick everything you mentioned. Cards you missed go into today's review.</p>`;
-    if(t.definition)h+=`<div class="leaf"><h3>Your definition</h3><p>${esc(t.definition)}</p></div>`;
-    if(dp.text)h+=`<details class="leaf"><summary>What you wrote</summary><div style="white-space:pre-wrap">${esc(dp.text)}</div></details>`;
-    h+=`<div class="leaf">${its.length||links.length?its.map(i=>row(i.id,i.front,i.back,frontCls(i),backCls(i))).join('')+links.map(l=>{const o=topic(l.a===id?l.b:l.a);return o?row('L'+l.id,'Connection → '+o.name,l.why):'';}).join(''):'<p class="tiny">This topic has nothing in it yet. Add some verses and quotes first.</p>'}</div>`;
-    h+=`<button class="primary full" onclick="dumpSave()">Save result</button>`;
+    const row=(key,inner)=>`<label class="check"><input type="checkbox" ${dp.got.has(key)?'checked':''} onchange="togGot('${key}',this.checked)"><span class="entry">${inner}</span></label>`;
+    const inner=i=>i.type==='verse'?`<span class="ref">${esc(i.front)}</span><span class="text">${esc(i.back)}</span>`:i.type==='quote'?`<span class="text quote">${esc(i.back)}</span><span class="by">${esc(i.front)}</span>`:`<span class="name">${esc(i.front)}</span><span class="plain">${esc(i.back)}</span>`;
+    h=`<h1>What did you cover?</h1><p class="muted">Tick everything you mentioned about ${esc(t.name)}. Cards you missed go into today's review.</p>`;
+    if(t.definition)h+=`<section><span class="label">Your definition</span><p class="serif">${esc(t.definition)}</p></section>`;
+    if(dp.text)h+=`<details><summary>Your notes</summary><p style="white-space:pre-wrap;margin-top:8px">${esc(dp.text)}</p></details>`;
+    h+=its.length||links.length?`<section class="entries">${its.map(i=>row(i.id,inner(i))).join('')}${links.map(l=>{const o=topic(l.a===id?l.b:l.a);return o?row('L'+l.id,`<span class="name">Link to ${esc(o.name)}</span><span class="plain">${esc(l.why)}</span>`):'';}).join('')}</section>`:'<p class="empty">This topic has nothing in it yet. Add some verses and quotes first.</p>';
+    h+=`<button class="btn primary block" onclick="dumpSave()">Save result</button>`;
   }
   render(h,'dump',dp.phase===2);
 }
@@ -356,7 +662,7 @@ function toggleTimer(){
   if(dp.left<=0)dp.left=120;
   b.textContent='Pause';
   timerInt=setInterval(()=>{dp.left--;const el=$('#tm');if(el)el.textContent=fmt(Math.max(0,dp.left));
-    if(dp.left<=0){clearInterval(timerInt);timerInt=null;toast("Time's up. Keep going if you have more.");const bb=$('#tb');if(bb)bb.textContent='Start again';}},1000);
+    if(dp.left<=0){clearInterval(timerInt);timerInt=null;try{navigator.vibrate&&navigator.vibrate(300);}catch(e){}toast("Time's up. Keep going if you have more.");const bb=$('#tb');if(bb)bb.textContent='Start again';}},1000);
 }
 function dumpCheck(){if(timerInt){clearInterval(timerInt);timerInt=null;}dp.phase=2;window.scrollTo(0,0);vDump(dp.id);}
 function togGot(k,on){on?dp.got.add(k):dp.got.delete(k);}
@@ -364,77 +670,78 @@ function dumpSave(){
   const t=topic(dp.id),its=itemsFor(dp.id),links=S.links.filter(l=>l.a===dp.id||l.b===dp.id);
   const total=its.length+links.length,score=dp.got.size;
   const missed=its.filter(i=>!dp.got.has(i.id));
-  missed.forEach(i=>{if(i.due!==today()){i.due=today();putItem(i);}});
-  if(total){t.dumps.push({date:today(),score,total});t.lastDump=today();putMeta();}
-  dp=null;
-  render(`<h1>${esc(t.name)}</h1><div class="leaf"><div><span class="stat">${score}/${total}</span> <span class="sub">recalled</span></div><p class="sub">${missed.length?`${missed.length} missed card${missed.length===1?' is':'s are'} now in today's review.`:'You remembered every card. Consider adding more depth to this topic.'}</p>
-  ${missed.length?`<button class="primary full" onclick="tab('review')">Review missed cards</button>`:''}<button class="full" onclick="stack=['home','topic/${t.id}'];route()">Open ${esc(t.name)}</button></div>`,'dump');
+  missed.forEach(i=>i.due=today());
+  if(total){t.dumps.push({date:today(),score,total});t.lastDump=today();}
+  save();dp=null;
+  render(`<h1>${esc(t.name)}</h1><section><p class="score">${score} <span class="muted" style="font-size:24px">of ${total}</span></p><p>${missed.length?`${missed.length===1?'The card you missed is':'The '+missed.length+' cards you missed are'} now in today's review.`:'You remembered everything. Consider adding more depth to this topic.'}</p></section>
+  <div class="actions">${missed.length?`<button class="btn primary" onclick="tab('review')">Review missed cards</button>`:''}<button class="btn" onclick="stack=['home','topic/${t.id}'];route()">Open ${esc(t.name)}</button></div>`,'dump');
 }
 
-/* ---------------- More ---------------- */
+/* ================= Backup ================= */
 function vMore(){
-  render(`<h1>More</h1>
-  <div class="leaf"><h3>Where your cards are saved</h3><p>Your cards are saved only on this phone, inside this app. Nothing is sent anywhere. If you uninstall the app or clear Chrome's site data, they're gone, so keep a backup.</p>${S.lastBackup?`<p class="tiny">Last backup: ${S.lastBackup}</p>`:''}</div>
-  <div class="leaf"><h3>Backup</h3><p class="sub">Keep a copy of everything, or move it somewhere else.</p>
-  <button class="full primary" onclick="exportFile()">Save a backup file</button>
-  <button class="full" onclick="copyBackup()">Copy backup to clipboard</button>
-  <div class="field"><label for="imp">Restore from a backup</label><input type="file" id="impf" accept=".json,application/json" onchange="importFile(this)" aria-label="Backup file"><textarea id="imp" rows="3" style="margin-top:8px" placeholder="…or paste a backup here"></textarea></div>
-  <button class="full" onclick="importText()">Restore pasted backup</button></div>
-  <div class="leaf"><h3>How to use Treasury</h3><ol>
+  render(backBtn()+`<h1>Backup</h1>
+  <section><p>Your cards are saved only on this phone, inside this app. Nothing is sent anywhere. If you uninstall the app or clear Chrome's site data, they're gone, so keep a backup somewhere safe, such as Google Drive or an email to yourself.</p>
+  <p class="muted small">${S.lastBackup?'Last backup: '+S.lastBackup:'You haven\'t made a backup yet.'}</p>
+  <div class="actions"><button class="btn primary" onclick="exportFile()">Save backup file</button><button class="btn" onclick="copyBackup()">Copy backup text</button></div></section>
+  <section><h2>Restore</h2><p class="muted small">This replaces everything in Treasury with the backup.</p>
+  <input type="file" id="impf" accept=".json,application/json" onchange="importFile(this)" aria-label="Choose backup file">
+  <textarea id="imp" rows="3" placeholder="Or paste backup text here"></textarea>
+  <div class="actions"><button class="btn" onclick="importText()">Restore pasted backup</button></div></section>
+  <section><h2>How to use Treasury</h2><ol class="steps">
   <li>Read slowly. When something strikes you, close the book and add it under a topic, in your own words where you can.</li>
-  <li>Do your daily review. Say each answer out loud before revealing it.</li>
-  <li>Once a week per topic, use Recall: explain the topic from memory, then check what you missed.</li>
-  <li>Rewrite your definitions as your understanding grows, and connect topics with a sentence on why.</li></ol></div>
-  <div class="leaf"><p class="tiny">Starter verses are from the KJV, which is in the public domain. Tap any card to switch it to your preferred translation. The starter concept explanations are placeholders for you to rewrite.</p>
-  <button class="danger" style="align-self:flex-start" onclick="resetAll()">Erase everything and start over</button></div>`,'more');
+  <li>Do your review each day. Say each answer out loud before you check it.</li>
+  <li>Once a week per topic, use Recall: explain the topic from memory, then see what you left out.</li>
+  <li>Check Links now and then, and link topics with one sentence on why they belong together.</li></ol></section>
+  <section><p class="muted small">Starter verses are from the King James Version, which is in the public domain. Tap any card to switch it to your preferred translation. The starter concept explanations are placeholders for you to rewrite.</p>
+  <button class="link danger" style="align-self:flex-start" onclick="resetAll()">Erase everything and start over</button></section>`,'home');
 }
 const backupText=()=>JSON.stringify(S,null,1);
+function markBackup(){S.lastBackup=today();saveNow();}
 function exportFile(){
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([backupText()],{type:'application/json'}));
   a.download=`treasury-backup-${today()}.json`;document.body.appendChild(a);a.click();a.remove();
-  S.lastBackup=today();saveNow();toast('Backup saved to your Downloads');
+  markBackup();toast('Backup saved to your Downloads');route(true);
 }
 function copyBackup(){
   const txt=backupText();
   const fallback=()=>{const ta=$('#imp');ta.value=txt;ta.focus();ta.select();toast('Select all and copy this text');};
-  try{navigator.clipboard.writeText(txt).then(()=>{S.lastBackup=today();saveNow();toast('Backup copied. Paste it into a note to keep it.');},fallback);}catch(e){fallback();}
-}
-function replaceAll(n){
-  const keep=new Set(n.items.map(i=>i.id));
-  S.items.forEach(i=>{if(!keep.has(i.id))dropItem(i.id);});
-  S=n;putAll();
+  try{navigator.clipboard.writeText(txt).then(()=>{markBackup();toast('Backup copied. Paste it somewhere safe.');},fallback);}catch(e){fallback();}
 }
 function restore(txt){
-  let o;try{o=JSON.parse(txt);if(!Array.isArray(o.topics)||!Array.isArray(o.items))throw 0;}catch(e){return toast("That doesn't look like a Treasury backup");}
-  ask({title:'Restore this backup?',body:`It has ${o.topics.length} topics and ${o.items.length} cards, and will replace everything in Treasury now.`,ok:'Restore',danger:true},()=>{
-    o.links=o.links||[];o.version=1;S=o;saveNow();toast('Restored');tab('home');
+  let o;try{o=JSON.parse(txt);if(!Array.isArray(o.topics)||!Array.isArray(o.items))throw 0;}catch(e){return toast("That isn't a Treasury backup");}
+  ask({title:'Restore this backup?',body:`It has ${plural(o.topics.length,'topic')} and ${plural(o.items.length,'card')}, and will replace everything in Treasury now.`,ok:'Restore',danger:true},()=>{
+    S=normalize(o);IDX=null;saveNow();toast('Backup restored');tab('home');
   });
 }
 function importFile(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>restore(r.result);r.readAsText(f);}
 function importText(){const t=$('#imp').value.trim();if(t)restore(t);}
 function resetAll(){
-  ask({title:'Erase everything?',body:'All your topics, cards and recall history will be deleted, and the starter topics put back. This cannot be undone unless you have a backup.',ok:'Erase',danger:true},async()=>{
-    const kit=await getKit();replaceAll(kit?fromKit(kit):{version:1,topics:[],items:[],links:[]});toast('Started over');tab('home');
+  ask({title:'Erase everything?',body:'All your topics, cards and recall history will be deleted and the starter topics put back. This cannot be undone without a backup.',ok:'Erase',danger:true},()=>{
+    S=fromKit(KIT);IDX=null;saveNow();toast('Started over');tab('home');
   });
 }
 
-/* ---------------- Route ---------------- */
-function route(){
+/* ================= Router ================= */
+function route(keep){
   if(timerInt){clearInterval(timerInt);timerInt=null;}
   const [v,a,b]=cur().split('/');
+  keep=keep===true;KEEP=keep;
+  try{return view(v,a,b,keep);}finally{KEEP=false;}
+}
+function view(v,a,b,keep){
   switch(v){
-    case 'topic':return vTopic(a);
+    case 'topic':return vTopic(a,keep);
     case 'review':return vReview();
     case 'add':return vAdd(a,b);
     case 'edit':return vAdd(null,null,a);
     case 'dump':return a?vDump(a):vDumpPick();
+    case 'links':return vLinks();
     case 'more':return vMore();
     default:return vHome();
   }
 }
 boot();
 </script>
-
 </body>
 </html>
